@@ -8,8 +8,7 @@ const wrapper = (cb) => {
             await cb(req, res);
         } catch (err) {
             console.log(err);
-        } finally {
-            await client.close();
+            res.status(500).json({ error: "Something went wrong" });
         }
     }
 }
