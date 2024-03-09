@@ -5,6 +5,7 @@ const app = express();
 const cors = require("cors");
 const academicYearsRouter = require("./routes/academic_years");
 const batchesRouter = require("./routes/batches");
+const studentsRouter = require("./routes/students");
 
 const port = process.env.PORT || 5000;
 
@@ -12,6 +13,7 @@ app.use(cors());
 
 app.use(academicYearsRouter);
 app.use(batchesRouter);
+app.use(studentsRouter);
 
 app.use((req, res) => res.status(404).json({ msg: "Page not found" }));
 

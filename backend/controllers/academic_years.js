@@ -18,7 +18,7 @@ const getOne = wrapper(async (req, res) => {
         const data = await academic_years.findOne({ _id });
 
         if (!data) {
-            return res.status(404).json({ error: "Data not found" });
+            return res.status(404).json({ error: "Academic year not found" });
         }
 
         return res.status(200).json({ data });

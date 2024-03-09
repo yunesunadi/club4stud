@@ -3,10 +3,10 @@ const { formatISO } = require("date-fns");
 const { wrapper } = require("../utils/utilities");
 
 const db = require("../utils/utilities").getDB();
-const batches = db.collection("batches");
+const students = db.collection("students");
 
 const getAll = wrapper(async (req, res) => {
-    const data = await batches.find().toArray();
+    const data = await students.find().toArray();
     return res.status(200).json({ data });
 });
 
@@ -15,10 +15,10 @@ const getOne = wrapper(async (req, res) => {
 
     if (ObjectId.isValid(id)) {
         const _id = new ObjectId(id);
-        const data = await batches.findOne({ _id });
+        const data = await students.findOne({ _id });
 
         if (!data) {
-            return res.status(404).json({ error: "Batch not found" });
+            return res.status(404).json({ error: "Student not found" });
         }
 
         return res.status(200).json({ data });
@@ -27,47 +27,41 @@ const getOne = wrapper(async (req, res) => {
 });
 
 const insert = wrapper(async (req, res) => {
-    const { name, founded_date, default_password, academic_year } = req.body;
+    const { student_id, name, email, phone_number, gender, date_of_birth, password, batch } = req.body;
 
-    if (!name || !founded_date || !default_password || !academic_year) {
+    if (!student_id || !name || !email || !phone_number || !gender || !date_of_birth || !password || !batch) {
         return res.status(400).json({ error: "Please fill in all fields" });
     }
 
-    const result = await batches.insertOne({
-        name,
-        founded_date,
-        default_password,
-        academic_year,
+    const result = await students.insertOne({
+        student_id, name, email, phone_number, gender, date_of_birth, password, batch,
         created_at: formatISO(new Date()),
         updated_at: formatISO(new Date())
     });
-    const data = await batches.findOne({ _id: new ObjectId(result.insertedId) });
+    const data = await students.findOne({ _id: new ObjectId(result.insertedId) });
 
     return res.status(200).json({ data });
 });
 
 const update = wrapper(async (req, res) => {
     const { id } = req.params;
-    const { name, founded_date, default_password, academic_year } = req.body;
+    const { student_id, name, email, phone_number, gender, date_of_birth, password, batch } = req.body;
 
-    if (!name || !founded_date || !default_password || !academic_year) {
+    if (!student_id || !name || !email || !phone_number || !gender || !date_of_birth || !password || !batch) {
         return res.status(400).json({ error: "Please fill in all fields" });
     }
 
     if (ObjectId.isValid(id)) {
         const _id = new ObjectId(id);
-        await batches.updateOne(
+        await students.updateOne(
             { _id },
             {
                 $set: {
-                    name,
-                    founded_date,
-                    default_password,
-                    academic_year,
+                    student_id, name, email, phone_number, gender, date_of_birth, password, batch,
                     updated_at: formatISO(new Date())
                 }
             });
-        const data = await batches.findOne({ _id });
+        const data = await students.findOne({ _id });
         return res.status(200).json(data);
     }
     return res.status(500).json({ error: "Not a valid id" });
@@ -78,7 +72,7 @@ const remove = wrapper(async (req, res) => {
 
     if (ObjectId.isValid(id)) {
         const _id = new ObjectId(id);
-        await batches.deleteOne({ _id });
+        await students.deleteOne({ _id });
         return res.status(204).json({});
     }
     return res.status(500).json({ error: "Not a valid id" });
