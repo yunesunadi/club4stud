@@ -1,5 +1,5 @@
+const bcrypt = require("bcrypt");
 const { wrapper } = require("../utils/utilities");
-
 const db = require("../utils/utilities").getDB();
 const clubs = db.collection("clubs");
 
@@ -25,8 +25,10 @@ const insert = wrapper(async (req, res) => {
         return res.status(400).json({ error: "Please fill in all fields" });
     }
 
-    const result = await students.insertOne({
-        name, description, purpose, member_fees, founded_date, phone_number, email, password,
+    const hash = await bcrypt.hash(password, 10);
+    const result = await clubs.insertOne({
+        name, description, purpose, member_fees, founded_date, phone_number, email, password: hash,
+        role: "club_admin",
         owner: "",
         request: null,
         approve: null,
@@ -35,7 +37,7 @@ const insert = wrapper(async (req, res) => {
         created_at: formatISO(new Date()),
         updated_at: formatISO(new Date())
     });
-    const data = await students.findOne({ _id: new ObjectId(result.insertedId) });
+    const data = await clubs.findOne({ _id: new ObjectId(result.insertedId) });
 
     return res.status(200).json({ data });
 });

@@ -8,10 +8,9 @@ const jwt = require("jsonwebtoken");
  * @param {express.NextFunction} next  
  */
 
-const auth = (req, res, next) => {
+const checkAuth = (req, res) => {
     const { authorization } = req.headers;
     const token = authorization?.split(" ")[1];
-
     if (!token) {
         return res.status(400).json({ error: "Token required" });
     }
@@ -20,9 +19,48 @@ const auth = (req, res, next) => {
     if (!user) {
         return res.status(401).json({ error: "Incorrect token" });
     }
+    return user;
+}
 
+const school_admin_auth = (req, res, next) => {
+    const user = checkAuth(req, res);
+    if (user.role === "school_admin") {
+        res.locals.user = user;
+    } else {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    next();
+}
+
+const club_admin_auth = (req, res, next) => {
+    const user = checkAuth(req, res);
+    if (user.role === "club_admin") {
+        res.locals.user = user;
+    } else {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    next();
+}
+
+const student_auth = (req, res, next) => {
+    const user = checkAuth(req, res);
+    if (user.role === "student") {
+        res.locals.user = user;
+    } else {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    next();
+}
+
+const auth = (req, res, next) => {
+    const user = checkAuth(req, res);
     res.locals.user = user;
     next();
 }
 
-module.exports = { auth };
+module.exports = {
+    school_admin_auth,
+    club_admin_auth,
+    student_auth,
+    auth
+};

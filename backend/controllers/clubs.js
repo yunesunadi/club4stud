@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongodb");
 const { formatISO } = require("date-fns");
+const bcrypt = require("bcrypt");
 const { wrapper } = require("../utils/utilities");
-
 const db = require("../utils/utilities").getDB();
 const clubs = db.collection("clubs");
 
@@ -53,12 +53,12 @@ const update = wrapper(async (req, res) => {
 
     if (ObjectId.isValid(id)) {
         const _id = new ObjectId(id);
+        const hash = await bcrypt.hash(password, 10);
         await clubs.updateOne(
             { _id },
             {
                 $set: {
-                    name, description, purpose, member_fees, founded_date, phone_number, email, password,
-                    updated_at: formatISO(new Date())
+                    name, description, purpose, member_fees, founded_date, phone_number, email, password: hash, updated_at: formatISO(new Date())
                 }
             });
         const data = await clubs.findOne({ _id });

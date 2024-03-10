@@ -61,7 +61,7 @@ const update = wrapper(async (req, res) => {
         return res.status(200).json(data);
     }
     return res.status(500).json({ error: "Not a valid id" });
-})
+});
 
 const remove = wrapper(async (req, res) => {
     const { id } = req.params;
