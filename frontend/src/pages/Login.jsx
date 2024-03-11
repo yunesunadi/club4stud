@@ -44,7 +44,12 @@ export default function Login() {
             </div>
             <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
                 <h1 className="text-2xl font-semibold mb-4 text-center text-gradient">Welcome to Club4Stud</h1>
-                {loginErr && <p>Incorrect email or password</p>}
+                {loginErr && <div className="flex justify-center items-center bg-slate-200 p-2 rounded-md border-slate-500 border-[1px] mb-2 ">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-slate-500 mt-1">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                    </svg>
+                    <p className="text-slate-600 pl-1.5">Incorrect email or password</p>
+                </div>}
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     const email = emailRef.current.value;

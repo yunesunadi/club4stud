@@ -33,11 +33,12 @@ const insert = wrapper(async (req, res) => {
         return res.status(400).json({ error: "Please fill in all fields" });
     }
 
+    const academic_year_id = new ObjectId(academic_year);
     const result = await batches.insertOne({
         name,
         founded_date,
         default_password,
-        academic_year,
+        academic_year: academic_year_id,
         created_at: formatISO(new Date()),
         updated_at: formatISO(new Date())
     });

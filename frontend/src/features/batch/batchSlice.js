@@ -2,16 +2,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
     isLoading: true,
-    academicYears: [],
+    batches: [],
 };
 
 const api = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
 
 export const getAll = createAsyncThunk(
-    "academicYear/getAll",
+    "batch/getAll",
     async () => {
-        const res = await fetch(`${api}/api/academic_years`, {
+        const res = await fetch(`${api}/api/batches`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -22,15 +22,16 @@ export const getAll = createAsyncThunk(
     }
 );
 
-const academicYearSlice = createSlice({
-    name: "academicYear",
+const batchSlice = createSlice({
+    name: "batch",
     initialState,
     reducers: {
         add: (state, action) => {
             (async () => {
-                await fetch(`${api}/api/academic_years`, {
+                const { name, founded_date, default_password, academic_year } = action.payload;
+                await fetch(`${api}/api/batches`, {
                     method: "POST",
-                    body: JSON.stringify({ name: action.payload }),
+                    body: JSON.stringify({ name, founded_date, default_password, academic_year }),
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
@@ -39,33 +40,37 @@ const academicYearSlice = createSlice({
             })();
         },
         update: (state, action) => {
+            const { _id, name, founded_date, default_password, academic_year } = action.payload;
             (async () => {
-                await fetch(`${api}/api/academic_years/${action.payload._id}`, {
+                await fetch(`${api}/api/batches/${_id}`, {
                     method: "PUT",
-                    body: JSON.stringify({ name: action.payload.name }),
+                    body: JSON.stringify({ name, founded_date, default_password, academic_year }),
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 });
             })();
-            state.academicYears = state.academicYears.map(academicYear => {
-                if (academicYear._id === action.payload._id) {
-                    academicYear.name = action.payload.name;
+            state.batches = state.batches.map(batch => {
+                if (batch._id === _id) {
+                    batch.name = name;
+                    batch.founded_date = founded_date;
+                    batch.default_password = default_password;
+                    batch.academic_year = academic_year;
                 }
-                return academicYear;
+                return batch;
             })
         },
         remove: (state, action) => {
             (async () => {
-                await fetch(`${api}/api/academic_years/${action.payload}`, {
+                await fetch(`${api}/api/batches/${action.payload}`, {
                     method: "DELETE",
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
             })();
-            state.academicYears = state.academicYears.filter(academicYear => academicYear._id !== action.payload);
+            state.batches = state.batches.filter(batch => batch._id !== action.payload);
         },
     },
     extraReducers: (builder) => {
@@ -75,7 +80,7 @@ const academicYearSlice = createSlice({
             })
             .addCase(getAll.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.academicYears = action.payload;
+                state.batches = action.payload;
             })
             .addCase(getAll.rejected, (state, action) => {
                 state.isLoading = false;
@@ -83,6 +88,6 @@ const academicYearSlice = createSlice({
     },
 });
 
-export const { add, update, remove } = academicYearSlice.actions;
+export const { add, update, remove } = batchSlice.actions;
 
-export default academicYearSlice.reducer;
+export default batchSlice.reducer;

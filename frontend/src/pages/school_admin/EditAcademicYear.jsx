@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { update } from "../../features/academicYear/academicYearSlice";
+
+const validateSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required."),
+});
 
 export default function EditAcademicYear() {
     const { id } = useParams();
@@ -9,6 +15,22 @@ export default function EditAcademicYear() {
     const dispatch = useDispatch();
     const [academicYear, setAcademicYear] = useState({});
     const nameRef = useRef();
+
+    const formik = useFormik({
+        initialValues: {
+            name: ""
+        },
+        validationSchema: validateSchema,
+    });
+
+    const handleChange = useCallback(
+        (key, value) =>
+            formik.setValues({
+                ...formik.values,
+                [key]: value,
+            }),
+        [formik]
+    );
 
     useEffect(() => {
         (async () => {
@@ -22,21 +44,23 @@ export default function EditAcademicYear() {
             const { data } = await res.json();
             setAcademicYear(data);
         })();
-    }, [])
-
-    const handleChange = () => {
-        const name = nameRef.current.value;
-        setAcademicYear({ ...academicYear, name });
-    }
+    }, []);
 
     return (
         <form
             onSubmit={e => {
                 e.preventDefault();
+                if (!academicYear.name) return false;
                 dispatch(update({ _id: id, name: academicYear.name }));
                 navigate("/school_admin/academic_years");
             }}>
-            <input type="text" name="name" defaultValue={academicYear.name} ref={nameRef} onChange={handleChange} />
+            <input type="text" name="name" defaultValue={academicYear.name} ref={nameRef}
+                onChange={(e) => {
+                    handleChange("name", e.target.value);
+                    const name = nameRef.current.value;
+                    setAcademicYear({ ...academicYear, name });
+                }} />
+            {formik.errors.name}
             <button type="submit">Edit</button>
         </form>
     )
