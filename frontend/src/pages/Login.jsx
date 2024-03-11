@@ -1,8 +1,16 @@
-import loginImg from "../assets/images/login.png";
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { useAuth } from "../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+import loginImg from "../assets/images/login.png";
 import RadioBtn from "../styled_components/RadioBtn";
+
+const validateSchema = Yup.object().shape({
+    email: Yup.string().email("Please enter a valid email.").required("Email is required."),
+    password: Yup.string().required("Password is required."),
+});
 
 export default function Login() {
     const emailRef = useRef();
@@ -11,6 +19,23 @@ export default function Login() {
     const [role, setRole] = useState("student");
     const { setAuth, setAuthUser } = useAuth();
     const navigate = useNavigate();
+
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        validationSchema: validateSchema,
+    });
+
+    const handleChange = useCallback(
+        (key, value) =>
+            formik.setValues({
+                ...formik.values,
+                [key]: value,
+            }),
+        [formik]
+    );
 
     return (
         <div className="bg-slate-100 flex justify-center items-center h-screen overflow-hidden">
@@ -68,20 +93,21 @@ export default function Login() {
                         <RadioBtn text="student" label="Student" role={role} setRole={setRole} />
                         <RadioBtn text="club_admin" label="Club Admin" role={role} setRole={setRole} />
                         <RadioBtn text="school_admin" label="School Admin" role={role} setRole={setRole} />
-
                     </div>
-
-                    <label className="block">
-                        <p className="text-slate-600 mb-2 font-semibold">Email</p>
-                        <input type="email" placeholder="name@example.com" className="peer w-full border border-slate-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" ref={emailRef} />
-                        <p className="mt-1 invisible peer-invalid:visible text-slate-600 text-sm">
-                            Please provide a valid email address.
+                    <div className="mb-2">
+                        <label htmlFor="email" className="block text-slate-600 mb-2 font-semibold">Email</label>
+                        <input type="email" placeholder="name@example.com" className="w-full border border-slate-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" ref={emailRef} value={formik.values.email}
+                            onChange={(e) => handleChange("email", e.target.value)} />
+                        <p className="mt-1 text-slate-600 text-sm">
+                            {formik.errors.email}
                         </p>
-                    </label>
-                    <div className="mb-8">
+                    </div>
+                    <div className="mb-6">
                         <label htmlFor="password" className="block text-slate-600 mb-2 font-semibold">Password</label>
-                        <input type="password" className="peer w-full border border-slate-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" ref={passwordRef} />
-                        <p className="mt-1 invisible peer-invalid:visible text-slate-600 text-sm">
+                        <input type="password" className="w-full border border-slate-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" ref={passwordRef} value={formik.values.password}
+                            onChange={(e) => handleChange("password", e.target.value)} />
+                        <p className="mt-1 text-slate-600 text-sm">
+                            {formik.errors.password}
                         </p>
                     </div>
                     <button type="submit" className="bg-gradient text-white font-semibold rounded-md py-2 px-4 w-full">Login</button>
