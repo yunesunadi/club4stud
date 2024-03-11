@@ -14,9 +14,9 @@ export default function AuthProvider({ children }) {
         const token = localStorage.getItem("token");
         (async () => {
             const api = import.meta.env.VITE_API_URL;
-            const res = await fetch(`${api}/verify`, {
+            const res = await fetch(`${api}/api/verify`, {
                 headers: {
-                    "Authorization": `Bearer ${token}`
+                    Authorization: `Bearer ${token}`
                 }
             });
 

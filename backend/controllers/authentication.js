@@ -34,9 +34,9 @@ const login = wrapper(async (req, res) => {
     return res.status(401).json({ error: "Incorrect email or password" });
 });
 
-const verify = wrapper(async (req, res) => {
+const verify = (req, res) => {
     return res.status(200).json(res.locals.user);
-});
+};
 
 module.exports = {
     login,

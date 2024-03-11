@@ -4,10 +4,10 @@
 
 @layer components {
     .bg-gradient {
-        @apply bg-gradient-to-r from-violet-600 to-indigo-600;
+        @apply bg-gradient-to-r from-blue-500 to-cyan-500;
     }
 
     .text-gradient {
-        @apply bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent;
-    }
+        @apply bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent;
+    }    
 }
