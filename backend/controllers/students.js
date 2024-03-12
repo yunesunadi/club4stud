@@ -10,6 +10,16 @@ const getAll = wrapper(async (req, res) => {
     return res.status(200).json({ data });
 });
 
+const getBatchAll = wrapper(async (req, res) => {
+    const { id } = req.params;
+    if (ObjectId.isValid(id)) {
+        const _id = new ObjectId(id);
+        const data = await students.find({ batch: _id }).toArray();
+        return res.status(200).json({ data });
+    }
+    return res.status(500).json({ error: "Not a valid id" });
+});
+
 const getOne = wrapper(async (req, res) => {
     const { id } = req.params;
 
@@ -34,8 +44,9 @@ const insert = wrapper(async (req, res) => {
     }
 
     const hash = await bcrypt.hash(password, 10);
+    const batchId = new ObjectId(batch);
     const result = await students.insertOne({
-        student_id, name, email, phone_number, gender, date_of_birth, password: hash, batch, role: "student",
+        student_id, name, email, phone_number, gender, date_of_birth, password: hash, batch: batchId, role: "student",
         created_at: formatISO(new Date()),
         updated_at: formatISO(new Date())
     });
@@ -55,11 +66,12 @@ const update = wrapper(async (req, res) => {
     if (ObjectId.isValid(id)) {
         const _id = new ObjectId(id);
         const hash = await bcrypt.hash(password, 10);
+        const batchId = new ObjectId(batch);
         await students.updateOne(
             { _id },
             {
                 $set: {
-                    student_id, name, email, phone_number, gender, date_of_birth, password: hash, batch,
+                    student_id, name, email, phone_number, gender, date_of_birth, password: hash, batch: batchId,
                     updated_at: formatISO(new Date())
                 }
             });
@@ -82,6 +94,7 @@ const remove = wrapper(async (req, res) => {
 
 module.exports = {
     getAll,
+    getBatchAll,
     getOne,
     insert,
     update,

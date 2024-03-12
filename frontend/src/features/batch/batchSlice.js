@@ -38,6 +38,7 @@ const batchSlice = createSlice({
                     },
                 });
             })();
+            state.batches = state.batches;
         },
         update: (state, action) => {
             const { _id, name, founded_date, default_password, academic_year } = action.payload;

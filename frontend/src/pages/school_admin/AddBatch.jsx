@@ -16,8 +16,8 @@ export default function AddBatch() {
     const nameRef = useRef();
     const foundedDateRef = useRef();
     const defaultPasswordRef = useRef();
-    const [academicYear, setAcademicYear] = useState("");
     const { academicYears } = useSelector((store) => store.academicYear);
+    const [academicYear, setAcademicYear] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -50,8 +50,9 @@ export default function AddBatch() {
                 const name = nameRef.current.value;
                 const founded_date = foundedDateRef.current.value;
                 const default_password = defaultPasswordRef.current.value;
-                if (!name || !founded_date || !default_password || !academicYear) return false;
-                dispatch(add({ name, founded_date, default_password, academic_year: academicYear }));
+                const academic_year = academicYear || academicYears[0]._id;
+                if (!name || !founded_date || !default_password) return false;
+                dispatch(add({ name, founded_date, default_password, academic_year }));
                 navigate("/school_admin/batches");
             }}>
             <label htmlFor="name">Name</label>
@@ -63,7 +64,7 @@ export default function AddBatch() {
                 onChange={(e) => handleChange("founded_date", e.target.value)} />
             {formik.errors.founded_date}
             <label htmlFor="default_password">Default Password</label>
-            <input type="text" id="default_password" ref={defaultPasswordRef} value={formik.values.default_password}
+            <input type="password" id="default_password" ref={defaultPasswordRef} value={formik.values.default_password}
                 onChange={(e) => handleChange("default_password", e.target.value)} />
             {formik.errors.default_password}
             <label htmlFor="academic_year">Academic Year</label>

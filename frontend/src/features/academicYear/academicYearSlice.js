@@ -37,6 +37,7 @@ const academicYearSlice = createSlice({
                     },
                 });
             })();
+            state.academicYears = state.academicYears;
         },
         update: (state, action) => {
             (async () => {
@@ -54,7 +55,7 @@ const academicYearSlice = createSlice({
                     academicYear.name = action.payload.name;
                 }
                 return academicYear;
-            })
+            });
         },
         remove: (state, action) => {
             (async () => {

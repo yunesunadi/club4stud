@@ -79,7 +79,7 @@ export default function EditBatch() {
                     setBatch({ ...batch, founded_date });
                 }} />
             <label htmlFor="default_password">Default Password</label>
-            <input type="text" id="default_password" defaultValue={batch.default_password} ref={defaultPasswordRef}
+            <input type="password" id="default_password" ref={defaultPasswordRef}
                 onChange={(e) => {
                     handleChange("default_password", e.target.value);
                     const default_password = defaultPasswordRef.current.value;
