@@ -13,6 +13,10 @@ import Students from "./pages/school_admin/Students";
 import AddStudent from "./pages/school_admin/AddStudent";
 import EditStudent from "./pages/school_admin/EditStudent";
 import BatchStudents from "./pages/school_admin/BatchStudents";
+import AddClub from "./pages/student/AddClub";
+import ClubProposals from "./pages/school_admin/ClubProposals";
+import ApprovedProposals from "./pages/school_admin/ApprovedProposals";
+import DeclinedProposals from "./pages/school_admin/DeclinedProposals";
 
 export default function App() {
     return (
@@ -38,8 +42,18 @@ export default function App() {
                     <Route path="students">
                         <Route index element={<Students />} />
                     </Route>
+                    <Route path="club_proposals">
+                        <Route index element={<ClubProposals />} />
+                        <Route path="approved" element={<ApprovedProposals />} />
+                        <Route path="declined" element={<DeclinedProposals />} />
+                    </Route>
                 </Route>
-                <Route path="student/home" element={<Home />} />
+                <Route path="student">
+                    <Route path="home" element={<Home />} />
+                    <Route path="clubs">
+                        <Route path="send_proposal" element={<AddClub />} />
+                    </Route>
+                </Route>
                 <Route path="*" element={<Error />} />
             </Routes>
         </BrowserRouter>

@@ -1,6 +1,5 @@
 const { ObjectId } = require("mongodb");
 const { formatISO } = require("date-fns");
-const bcrypt = require("bcrypt");
 const { wrapper } = require("../utils/utilities");
 const db = require("../utils/utilities").getDB();
 const students = db.collection("students");
@@ -43,10 +42,9 @@ const insert = wrapper(async (req, res) => {
         return res.status(400).json({ error: "Please fill in all fields" });
     }
 
-    const hash = await bcrypt.hash(password, 10);
     const batchId = new ObjectId(batch);
     const result = await students.insertOne({
-        student_id, name, email, phone_number, gender, date_of_birth, password: hash, batch: batchId, role: "student",
+        student_id, name, email, phone_number, gender, date_of_birth, password, batch: batchId, role: "student",
         created_at: formatISO(new Date()),
         updated_at: formatISO(new Date())
     });
@@ -65,13 +63,12 @@ const update = wrapper(async (req, res) => {
 
     if (ObjectId.isValid(id)) {
         const _id = new ObjectId(id);
-        const hash = await bcrypt.hash(password, 10);
         const batchId = new ObjectId(batch);
         await students.updateOne(
             { _id },
             {
                 $set: {
-                    student_id, name, email, phone_number, gender, date_of_birth, password: hash, batch: batchId,
+                    student_id, name, email, phone_number, gender, date_of_birth, password, batch: batchId,
                     updated_at: formatISO(new Date())
                 }
             });

@@ -9,16 +9,16 @@ const students = db.collection("students");
 
 const login = wrapper(async (req, res) => {
     let user;
-    const { role, email, password } = req.body;
+    const { email, password, role } = req.body;
 
-    if (!role || !email || !password) {
+    if (!email || !password || !role) {
         return res.status(400).json({ error: "Role, email or password required" });
     }
 
     if (role === "school_admin") {
         user = await school_admins.findOne({ email });
     } else if (role === "club_admin") {
-        user = await clubs.findOne({ email });
+        user = await clubs.findOne({ email, approve: true });
     } else if (role === "student") {
         user = await students.findOne({ email });
     }
