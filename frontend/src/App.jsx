@@ -17,6 +17,8 @@ import AddClub from "./pages/student/AddClub";
 import ClubProposals from "./pages/school_admin/ClubProposals";
 import ApprovedProposals from "./pages/school_admin/ApprovedProposals";
 import DeclinedProposals from "./pages/school_admin/DeclinedProposals";
+import Clubs from "./pages/student/Clubs";
+import RequestedClubs from "./pages/student/RequestedClubs";
 
 export default function App() {
     return (
@@ -51,6 +53,8 @@ export default function App() {
                 <Route path="student">
                     <Route path="home" element={<Home />} />
                     <Route path="clubs">
+                        <Route index element={<Clubs />} />
+                        <Route path="requested" element={<RequestedClubs />} />
                         <Route path="send_proposal" element={<AddClub />} />
                     </Route>
                 </Route>

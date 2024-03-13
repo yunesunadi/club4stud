@@ -78,10 +78,59 @@ const remove = wrapper(async (req, res) => {
     return res.status(500).json({ error: "Not a valid id" });
 });
 
+const join = wrapper(async (req, res) => {
+    const { cid, sid } = req.params;
+
+    if (ObjectId.isValid(cid) && ObjectId.isValid(sid)) {
+        const _id = new ObjectId(cid);
+        const student = new ObjectId(sid);
+        await clubs.updateOne(
+            { _id },
+            {
+                $push: {
+                    members: {
+                        student, request: true, approve: false,
+                        created_at: formatISO(new Date()),
+                        updated_at: formatISO(new Date())
+                    }
+                },
+                $set: {
+                    updated_at: formatISO(new Date())
+                }
+            });
+        const data = await clubs.findOne({ _id });
+        return res.status(200).json(data);
+    }
+    return res.status(500).json({ error: "Not a valid id" });
+});
+
+const cancel = wrapper(async (req, res) => {
+    const { cid, sid } = req.params;
+
+    if (ObjectId.isValid(cid) && ObjectId.isValid(sid)) {
+        const _id = new ObjectId(cid);
+        const student = new ObjectId(sid);
+        await clubs.updateOne(
+            { _id, "members.student": student },
+            {
+                $set: {
+                    "members.$.request": false,
+                    "members.$.updated_at": formatISO(new Date()),
+                    updated_at: formatISO(new Date())
+                }
+            });
+        const data = await clubs.findOne({ _id });
+        return res.status(200).json(data);
+    }
+    return res.status(500).json({ error: "Not a valid id" });
+});
+
 module.exports = {
     getAll,
     getOne,
     getMembers,
     update,
-    remove
+    remove,
+    join,
+    cancel
 }
