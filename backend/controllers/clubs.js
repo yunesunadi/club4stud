@@ -27,20 +27,52 @@ const getOne = wrapper(async (req, res) => {
 });
 
 const getMembers = wrapper(async (req, res) => {
-    const { id } = req.params;
+    const { _id } = res.locals.user;
+    const club_id = new ObjectId(_id);
 
-    if (ObjectId.isValid(id)) {
-        const _id = new ObjectId(id);
-        const result = await clubs.findOne({ _id });
-        const data = result.members;
-
-        if (data.length === 0) {
-            return res.status(404).json({ error: "Members not found" });
+    const data = await clubs.aggregate([
+        { $match: { "_id": club_id } },
+        {
+            $lookup: {
+                from: "students",
+                localField: "members.student",
+                foreignField: "_id",
+                as: "memberDetails"
+            }
+        },
+        {
+            $unwind: "$members"
+        },
+        {
+            $lookup: {
+                from: "students",
+                localField: "members.student",
+                foreignField: "_id",
+                as: "members.student"
+            }
+        },
+        {
+            $unwind: "$members.student"
+        },
+        {
+            $group: {
+                _id: "$_id",
+                members: {
+                    $push: {
+                        student: "$members.student",
+                        request: "$members.request",
+                        approve: "$members.approve"
+                    }
+                },
+            }
+        },
+        {
+            $project: {
+                members: 1,
+            }
         }
-
-        return res.status(200).json({ data });
-    }
-    return res.status(500).json({ error: "Not a valid id" });
+    ]).toArray();
+    return res.status(200).json({ data });
 });
 
 const update = wrapper(async (req, res) => {
@@ -125,12 +157,36 @@ const cancel = wrapper(async (req, res) => {
     return res.status(500).json({ error: "Not a valid id" });
 });
 
+const approve = wrapper(async (req, res) => {
+    const { id } = req.params;
+    const { _id: club_id } = res.locals.user;
+
+    if (ObjectId.isValid(id) && ObjectId.isValid(club_id)) {
+        const _id = new ObjectId(club_id);
+        const student_id = new ObjectId(id);
+
+        await clubs.updateOne(
+            { _id, "members.student": student_id },
+            {
+                $set: {
+                    "members.$.approve": true,
+                    "members.$.updated_at": formatISO(new Date()),
+                    updated_at: formatISO(new Date())
+                }
+            });
+        const data = await clubs.findOne({ _id });
+        return res.status(200).json(data);
+    }
+    return res.status(500).json({ error: "Not a valid id" });
+});
+
 module.exports = {
     getAll,
     getOne,
-    getMembers,
     update,
     remove,
     join,
-    cancel
+    cancel,
+    getMembers,
+    approve
 }

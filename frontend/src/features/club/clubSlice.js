@@ -95,7 +95,6 @@ const clubSlice = createSlice({
                     method: "PUT",
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
                     },
                 });
             })();
@@ -121,7 +120,6 @@ const clubSlice = createSlice({
                     method: "PUT",
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
                     },
                 });
             })();
