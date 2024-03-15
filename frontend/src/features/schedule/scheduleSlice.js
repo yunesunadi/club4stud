@@ -3,6 +3,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const initialState = {
     isLoading: true,
     schedules: [],
+    joinedSchedules: [],
+    attendance: []
 };
 
 const api = import.meta.env.VITE_API_URL;
@@ -19,6 +21,38 @@ export const getAll = createAsyncThunk(
         const { data } = await res.json();
 
         return data[0].schedules.filter(schedule => (Object.keys(schedule).length !== 0));
+    }
+);
+
+export const getJoined = createAsyncThunk(
+    "schedule/getJoined",
+    async () => {
+        const res = await fetch(`${api}/api/schedules/joined`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const { data } = await res.json();
+
+        return data[0].schedules.filter(schedule => (Object.keys(schedule).length !== 0));
+    }
+);
+
+export const getAttendance = createAsyncThunk(
+    "schedule/getAttendance",
+    async () => {
+        const url = window.location.href;
+        const url_parts = url.split("/");
+        const id = url_parts[url_parts.length - 1];
+        const res = await fetch(`${api}/api/schedules/attendance/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const { data } = await res.json();
+        const attendance = data[0].schedules[0].attendance;
+
+        return { _id: id, attendance };
     }
 );
 
@@ -71,6 +105,46 @@ const scheduleSlice = createSlice({
                 return schedule;
             });
         },
+        present: (state, action) => {
+            const { schedule_id, student_id } = action.payload;
+            (async () => {
+                await fetch(`${api}/api/schedules/attendance/${schedule_id}/present/${student_id}`, {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+            })();
+            state.attendance = {
+                _id: state.attendance._id, attendance: state.attendance.attendance?.map(att => {
+                    if (att.student._id === student_id) {
+                        att.present = true;
+                        att.absent = false;
+                    }
+                    return att;
+                })
+            };
+        },
+        absent: (state, action) => {
+            const { schedule_id, student_id } = action.payload;
+            (async () => {
+                await fetch(`${api}/api/schedules/attendance/${schedule_id}/absent/${student_id}`, {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+            })();
+            state.attendance = {
+                _id: state.attendance._id, attendance: state.attendance.attendance?.map(att => {
+                    if (att.student._id === student_id) {
+                        att.absent = true;
+                        att.present = false;
+                    }
+                    return att;
+                })
+            };
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -84,9 +158,29 @@ const scheduleSlice = createSlice({
             .addCase(getAll.rejected, (state, action) => {
                 state.isLoading = false;
             })
+            .addCase(getJoined.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getJoined.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.joinedSchedules = action.payload;
+            })
+            .addCase(getJoined.rejected, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(getAttendance.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAttendance.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.attendance = action.payload;
+            })
+            .addCase(getAttendance.rejected, (state, action) => {
+                state.isLoading = false;
+            });
     },
 });
 
-export const { add, update, remove } = scheduleSlice.actions;
+export const { add, update, remove, present, absent } = scheduleSlice.actions;
 
 export default scheduleSlice.reducer;

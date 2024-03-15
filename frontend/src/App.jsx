@@ -23,9 +23,11 @@ import ClubDashboard from "./pages/club_admin/Dashboard";
 import ClubMembers from "./pages/club_admin/ClubMembers";
 import JoinedMembers from "./pages/club_admin/JoinedMembers";
 import SchoolClubs from "./pages/school_admin/Clubs";
-import Schedules from "./pages/club_admin/Schedules";
+import ClubSchedules from "./pages/club_admin/Schedules";
 import AddSchedule from "./pages/club_admin/AddSchedule";
 import EditSchedule from "./pages/club_admin/EditSchedule";
+import StudentSchedules from "./pages/student/Schedules";
+import Attendance from "./pages/club_admin/Attendance";
 
 export default function App() {
     return (
@@ -65,6 +67,9 @@ export default function App() {
                         <Route path="requested" element={<RequestedClubs />} />
                         <Route path="send_proposal" element={<AddClub />} />
                     </Route>
+                    <Route path="schedules">
+                        <Route index element={<StudentSchedules />} />
+                    </Route>
                 </Route>
                 <Route path="club_admin">
                     <Route path="dashboard" element={<ClubDashboard />} />
@@ -74,9 +79,10 @@ export default function App() {
                             <Route path="joined" element={<JoinedMembers />} />
                         </Route>
                         <Route path="schedules">
-                            <Route index element={<Schedules />} />
+                            <Route index element={<ClubSchedules />} />
                             <Route path="create" element={<AddSchedule />} />
                             <Route path="edit/:id" element={<EditSchedule />} />
+                            <Route path="attendance/:id" element={<Attendance />} />
                         </Route>
                     </Route>
                 </Route>
