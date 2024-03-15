@@ -3,7 +3,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const initialState = {
     isLoading: true,
     requestedClubs: [],
-    members: [],
+    clubMembers: [],
+    joinedMembers: [],
 };
 const api = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("token");
@@ -22,8 +23,8 @@ export const getRequested = createAsyncThunk(
     }
 );
 
-export const getMembers = createAsyncThunk(
-    "clubMember/getMembers",
+export const getClubMembers = createAsyncThunk(
+    "clubMember/getClubMembers",
     async () => {
         const res = await fetch(`${api}/api/clubs/members`, {
             headers: {
@@ -32,7 +33,21 @@ export const getMembers = createAsyncThunk(
         });
         const { data } = await res.json();
 
-        return data;
+        return data[0].members.filter(({ request, approve }) => request && approve);
+    }
+);
+
+export const getJoinedMembers = createAsyncThunk(
+    "clubMember/getJoinedMembers",
+    async () => {
+        const res = await fetch(`${api}/api/clubs/members`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const { data } = await res.json();
+
+        return data[0].members.filter(({ request, approve }) => request && !approve);
     }
 );
 
@@ -87,14 +102,24 @@ const clubMemberSlice = createSlice({
             .addCase(getRequested.rejected, (state, action) => {
                 state.isLoading = false;
             })
-            .addCase(getMembers.pending, (state) => {
+            .addCase(getClubMembers.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getMembers.fulfilled, (state, action) => {
+            .addCase(getClubMembers.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.members = action.payload;
+                state.clubMembers = action.payload;
             })
-            .addCase(getMembers.rejected, (state, action) => {
+            .addCase(getClubMembers.rejected, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(getJoinedMembers.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getJoinedMembers.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.joinedMembers = action.payload;
+            })
+            .addCase(getJoinedMembers.rejected, (state, action) => {
                 state.isLoading = false;
             });
     },

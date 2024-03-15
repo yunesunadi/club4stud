@@ -4,6 +4,7 @@ import batchReducer from "./features/batch/batchSlice";
 import studentReducer from "./features/student/studentSlice";
 import clubReducer from "./features/club/clubSlice";
 import clubMemberReducer from "./features/clubMember/clubMemberSlice";
+import scheduleReducer from "./features/schedule/scheduleSlice";
 
 export const store = configureStore({
     reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
         student: studentReducer,
         club: clubReducer,
         clubMember: clubMemberReducer,
+        schedule: scheduleReducer,
     },
 });

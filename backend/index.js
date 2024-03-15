@@ -11,6 +11,7 @@ const clubProposalsRouter = require("./routes/club_proposals");
 const clubsRouter = require("./routes/clubs");
 const schoolAdminsRouter = require("./routes/school_admins");
 const clubMembersRouter = require("./routes/club_members");
+const schedulesRouter = require("./routes/schedules");
 
 const port = process.env.PORT || 5000;
 
@@ -24,6 +25,7 @@ app.use(clubProposalsRouter);
 app.use(clubsRouter);
 app.use(schoolAdminsRouter);
 app.use(clubMembersRouter);
+app.use(schedulesRouter);
 
 app.use((req, res) => res.status(404).json({ msg: "Page not found" }));
 

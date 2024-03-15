@@ -17,11 +17,15 @@ import AddClub from "./pages/student/AddClub";
 import ClubProposals from "./pages/school_admin/ClubProposals";
 import ApprovedProposals from "./pages/school_admin/ApprovedProposals";
 import DeclinedProposals from "./pages/school_admin/DeclinedProposals";
-import Clubs from "./pages/student/Clubs";
+import StudentClubs from "./pages/student/Clubs";
 import RequestedClubs from "./pages/student/RequestedClubs";
 import ClubDashboard from "./pages/club_admin/Dashboard";
 import ClubMembers from "./pages/club_admin/ClubMembers";
 import JoinedMembers from "./pages/club_admin/JoinedMembers";
+import SchoolClubs from "./pages/school_admin/Clubs";
+import Schedules from "./pages/club_admin/Schedules";
+import AddSchedule from "./pages/club_admin/AddSchedule";
+import EditSchedule from "./pages/club_admin/EditSchedule";
 
 export default function App() {
     return (
@@ -52,21 +56,27 @@ export default function App() {
                         <Route path="approved" element={<ApprovedProposals />} />
                         <Route path="declined" element={<DeclinedProposals />} />
                     </Route>
+                    <Route path="clubs" element={<SchoolClubs />} />
                 </Route>
                 <Route path="student">
                     <Route path="home" element={<Home />} />
                     <Route path="clubs">
-                        <Route index element={<Clubs />} />
+                        <Route index element={<StudentClubs />} />
                         <Route path="requested" element={<RequestedClubs />} />
                         <Route path="send_proposal" element={<AddClub />} />
                     </Route>
                 </Route>
                 <Route path="club_admin">
                     <Route path="dashboard" element={<ClubDashboard />} />
-                    <Route path="clubs">
+                    <Route path="club">
                         <Route path="members">
                             <Route index element={<ClubMembers />} />
                             <Route path="joined" element={<JoinedMembers />} />
+                        </Route>
+                        <Route path="schedules">
+                            <Route index element={<Schedules />} />
+                            <Route path="create" element={<AddSchedule />} />
+                            <Route path="edit/:id" element={<EditSchedule />} />
                         </Route>
                     </Route>
                 </Route>
