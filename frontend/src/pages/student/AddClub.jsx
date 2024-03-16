@@ -15,14 +15,14 @@ const validateSchema = Yup.object().shape({
     phone_number: Yup.number().required("Phone number is required."),
     email: Yup.string().email("Please enter a valid email.").required("Email is required."),
     password: Yup.string()
-        .required("Password is required")
+        .required("Password is required.")
         .min(8, "Password must be 8 or more characters.")
         .matches(/(?=.*[a-z])(?=.*[A-Z])\w+/, "Password should contain at least one uppercase and lowercase character.")
         .matches(/\d/, "Password should contain at least one number.")
         .matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, "Password should contain at least one special character."),
 });
 
-export default function AddBatch() {
+export default function AddClub() {
     const nameRef = useRef();
     const descriptionRef = useRef();
     const purposeRef = useRef();

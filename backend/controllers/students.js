@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongodb");
 const { formatISO } = require("date-fns");
+const bcrypt = require("bcrypt");
 const { wrapper } = require("../utils/utilities");
 const db = require("../utils/utilities").getDB();
 const students = db.collection("students");
@@ -76,7 +77,37 @@ const update = wrapper(async (req, res) => {
         return res.status(200).json(data);
     }
     return res.status(500).json({ error: "Not a valid id" });
-})
+});
+
+const update_password = wrapper(async (req, res) => {
+    const { _id: user_id } = res.locals.user;
+    const { old_password, new_password } = req.body;
+
+    if (!old_password || !new_password) {
+        return res.status(400).json({ error: "Old or new password required" });
+    }
+
+    if (ObjectId.isValid(user_id)) {
+        const _id = new ObjectId(user_id);
+        const result = await students.findOne({ _id });
+
+        if (await bcrypt.compare(old_password, result.password)) {
+            const hash = await bcrypt.hash(new_password, 10);
+            await students.updateOne(
+                { _id },
+                {
+                    $set: {
+                        password: hash,
+                        updated_at: formatISO(new Date())
+                    }
+                });
+            const data = await students.findOne({ _id });
+            return res.status(200).json(data);
+        }
+        return res.status(500).json({ error: "Not a valid id" });
+    }
+    return res.status(500).json({ error: "Old password doesn't match" });
+});
 
 const remove = wrapper(async (req, res) => {
     const { id } = req.params;
@@ -95,5 +126,6 @@ module.exports = {
     getOne,
     insert,
     update,
+    update_password,
     remove
 }

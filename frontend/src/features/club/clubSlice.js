@@ -6,6 +6,7 @@ const initialState = {
     clubProposals: [],
     approvedProposals: [],
     declinedProposals: [],
+    authClub: {}
 };
 
 const api = import.meta.env.VITE_API_URL;
@@ -15,6 +16,20 @@ export const getAll = createAsyncThunk(
     "club/getAll",
     async () => {
         const res = await fetch(`${api}/api/clubs`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const { data } = await res.json();
+
+        return data;
+    }
+);
+
+export const getAuthClub = createAsyncThunk(
+    "club/getAuthClub",
+    async () => {
+        const res = await fetch(`${api}/api/clubs/auth`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -139,11 +154,11 @@ const clubSlice = createSlice({
             state.clubs = state.clubs.filter(club => club._id !== action.payload);
         },
         update: (state, action) => {
-            const { _id, name, email, phone_number, gender, date_of_birth, password, batch } = action.payload;
+            const { name, description, purpose, member_fees, founded_date, phone_number, email } = action.payload;
             (async () => {
-                await fetch(`${api}/api/clubs/${_id}`, {
+                await fetch(`${api}/api/clubs/update`, {
                     method: "PUT",
-                    body: JSON.stringify({ name, email, phone_number, gender, date_of_birth, password, batch }),
+                    body: JSON.stringify({ name, description, purpose, member_fees, founded_date, phone_number, email }),
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
@@ -153,12 +168,12 @@ const clubSlice = createSlice({
             state.clubs = state.clubs.map(club => {
                 if (club._id === _id) {
                     club.name = name;
-                    club.email = email;
+                    club.description = description;
+                    club.purpose = purpose;
+                    club.member_fees = member_fees;
+                    club.founded_date = founded_date;
                     club.phone_number = phone_number;
-                    club.gender = gender;
-                    club.date_of_birth = date_of_birth;
-                    club.password = password;
-                    club.batch = batch;
+                    club.email = email;
                 }
                 return club;
             });
@@ -173,6 +188,19 @@ const clubSlice = createSlice({
                 });
             })();
             state.clubs = state.clubs.filter(club => club._id !== action.payload);
+        },
+        updatePassword: (state, action) => {
+            const { old_password, new_password } = action.payload;
+            (async () => {
+                await fetch(`${api}/api/clubs/update/password`, {
+                    method: "PUT",
+                    body: JSON.stringify({ old_password, new_password }),
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+            })();
         },
     },
     extraReducers: (builder) => {
@@ -216,10 +244,20 @@ const clubSlice = createSlice({
             })
             .addCase(getDeclined.rejected, (state, action) => {
                 state.isLoading = false;
+            })
+            .addCase(getAuthClub.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAuthClub.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.authClub = action.payload;
+            })
+            .addCase(getAuthClub.rejected, (state, action) => {
+                state.isLoading = false;
             });
     },
 });
 
-export const { add, update, remove, approve, decline } = clubSlice.actions;
+export const { add, update, remove, approve, decline, updatePassword } = clubSlice.actions;
 
 export default clubSlice.reducer;

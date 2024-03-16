@@ -26,24 +26,21 @@ const insert = wrapper(async (req, res) => {
     return res.status(200).json(user);
 });
 
-const update = wrapper(async (req, res) => {
-    const { id } = req.params;
-    const { email, password } = req.body;
+const update_email = wrapper(async (req, res) => {
+    const { _id: user_id } = res.locals.user;
+    const { email } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({ error: "Email or password required" });
+    if (!email) {
+        return res.status(400).json({ error: "Email required" });
     }
 
-    if (ObjectId.isValid(id)) {
-        const _id = new ObjectId(id);
-        const hash = await bcrypt.hash(password, 10);
+    if (ObjectId.isValid(user_id)) {
+        const _id = new ObjectId(user_id);
         await school_admins.updateOne(
             { _id },
             {
                 $set: {
-                    email,
-                    password: hash,
-                    updated_at: formatISO(new Date())
+                    email, updated_at: formatISO(new Date())
                 }
             });
         const data = await school_admins.findOne({ _id });
@@ -52,7 +49,38 @@ const update = wrapper(async (req, res) => {
     return res.status(500).json({ error: "Not a valid id" });
 });
 
+const update_password = wrapper(async (req, res) => {
+    const { _id: user_id } = res.locals.user;
+    const { old_password, new_password } = req.body;
+
+    if (!old_password || !new_password) {
+        return res.status(400).json({ error: "Old or new password required" });
+    }
+
+    if (ObjectId.isValid(user_id)) {
+        const _id = new ObjectId(user_id);
+        const result = await school_admins.findOne({ _id });
+
+        if (await bcrypt.compare(old_password, result.password)) {
+            const hash = await bcrypt.hash(new_password, 10);
+            await school_admins.updateOne(
+                { _id },
+                {
+                    $set: {
+                        password: hash,
+                        updated_at: formatISO(new Date())
+                    }
+                });
+            const data = await school_admins.findOne({ _id });
+            return res.status(200).json(data);
+        }
+        return res.status(500).json({ error: "Not a valid id" });
+    }
+    return res.status(500).json({ error: "Old password doesn't match" });
+});
+
 module.exports = {
     insert,
-    update
+    update_email,
+    update_password
 }

@@ -28,6 +28,9 @@ import AddSchedule from "./pages/club_admin/AddSchedule";
 import EditSchedule from "./pages/club_admin/EditSchedule";
 import StudentSchedules from "./pages/student/Schedules";
 import Attendance from "./pages/club_admin/Attendance";
+import SchoolSetting from "./pages/school_admin/Setting";
+import ClubSetting from "./pages/club_admin/Setting";
+import StudentSetting from "./pages/student/Setting";
 
 export default function App() {
     return (
@@ -59,6 +62,7 @@ export default function App() {
                         <Route path="declined" element={<DeclinedProposals />} />
                     </Route>
                     <Route path="clubs" element={<SchoolClubs />} />
+                    <Route path="setting" element={<SchoolSetting />} />
                 </Route>
                 <Route path="student">
                     <Route path="home" element={<Home />} />
@@ -70,6 +74,7 @@ export default function App() {
                     <Route path="schedules">
                         <Route index element={<StudentSchedules />} />
                     </Route>
+                    <Route path="setting" element={<StudentSetting />} />
                 </Route>
                 <Route path="club_admin">
                     <Route path="dashboard" element={<ClubDashboard />} />
@@ -85,6 +90,7 @@ export default function App() {
                             <Route path="attendance/:id" element={<Attendance />} />
                         </Route>
                     </Route>
+                    <Route path="setting" element={<ClubSetting />} />
                 </Route>
                 <Route path="*" element={<Error />} />
             </Routes>

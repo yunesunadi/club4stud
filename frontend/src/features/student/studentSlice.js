@@ -110,6 +110,19 @@ const studentSlice = createSlice({
             state.students = state.students.filter(student => student._id !== action.payload);
             state.batchStudents = state.batchStudents.filter(student => student._id !== action.payload);
         },
+        updatePassword: (state, action) => {
+            const { old_password, new_password } = action.payload;
+            (async () => {
+                await fetch(`${api}/api/students/update/password`, {
+                    method: "PUT",
+                    body: JSON.stringify({ old_password, new_password }),
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+            })();
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -136,6 +149,6 @@ const studentSlice = createSlice({
     },
 });
 
-export const { add, update, remove } = studentSlice.actions;
+export const { add, update, remove, updatePassword } = studentSlice.actions;
 
 export default studentSlice.reducer;

@@ -5,6 +5,7 @@ import studentReducer from "./features/student/studentSlice";
 import clubReducer from "./features/club/clubSlice";
 import clubMemberReducer from "./features/clubMember/clubMemberSlice";
 import scheduleReducer from "./features/schedule/scheduleSlice";
+import schoolAdminReducer from "./features/schoolAdmin/schoolAdminSlice";
 
 export const store = configureStore({
     reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
         club: clubReducer,
         clubMember: clubMemberReducer,
         schedule: scheduleReducer,
+        schoolAdmin: schoolAdminReducer
     },
 });

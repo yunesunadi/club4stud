@@ -26,6 +26,22 @@ const getOne = wrapper(async (req, res) => {
     return res.status(500).json({ error: "Not a valid id" });
 });
 
+const getAuthClub = wrapper(async (req, res) => {
+    const { _id: id } = res.locals.user;
+
+    if (ObjectId.isValid(id)) {
+        const _id = new ObjectId(id);
+        const data = await clubs.findOne({ _id });
+
+        if (!data) {
+            return res.status(404).json({ error: "Club not found" });
+        }
+
+        return res.status(200).json({ data });
+    }
+    return res.status(500).json({ error: "Not a valid id" });
+});
+
 const getMembers = wrapper(async (req, res) => {
     const { _id } = res.locals.user;
     const club_id = new ObjectId(_id);
@@ -76,28 +92,57 @@ const getMembers = wrapper(async (req, res) => {
 });
 
 const update = wrapper(async (req, res) => {
-    const { id } = req.params;
-    const { name, description, purpose, member_fees, founded_date, phone_number, email, password } = req.body;
+    const { _id: user_id } = res.locals.user;
+    const { name, description, purpose, member_fees, founded_date, phone_number, email } = req.body;
 
-    if (!name || !description || !purpose || !member_fees || !founded_date || !phone_number || !email || !password) {
+    if (!name || !description || !purpose || !member_fees || !founded_date || !phone_number || !email) {
         return res.status(400).json({ error: "Please fill in all fields" });
     }
 
-    if (ObjectId.isValid(id)) {
-        const _id = new ObjectId(id);
-        const hash = await bcrypt.hash(password, 10);
+    if (ObjectId.isValid(user_id)) {
+        const _id = new ObjectId(user_id);
         await clubs.updateOne(
             { _id },
             {
                 $set: {
-                    name, description, purpose, member_fees, founded_date, phone_number, email, password: hash, updated_at: formatISO(new Date())
+                    name, description, purpose, member_fees, founded_date, phone_number, email, updated_at: formatISO(new Date())
                 }
             });
         const data = await clubs.findOne({ _id });
         return res.status(200).json(data);
     }
     return res.status(500).json({ error: "Not a valid id" });
-})
+});
+
+const update_password = wrapper(async (req, res) => {
+    const { _id: user_id } = res.locals.user;
+    const { old_password, new_password } = req.body;
+
+    if (!old_password || !new_password) {
+        return res.status(400).json({ error: "Old or new password required" });
+    }
+
+    if (ObjectId.isValid(user_id)) {
+        const _id = new ObjectId(user_id);
+        const result = await clubs.findOne({ _id });
+
+        if (await bcrypt.compare(old_password, result.password)) {
+            const hash = await bcrypt.hash(new_password, 10);
+            await clubs.updateOne(
+                { _id },
+                {
+                    $set: {
+                        password: hash,
+                        updated_at: formatISO(new Date())
+                    }
+                });
+            const data = await clubs.findOne({ _id });
+            return res.status(200).json(data);
+        }
+        return res.status(500).json({ error: "Not a valid id" });
+    }
+    return res.status(500).json({ error: "Old password doesn't match" });
+});
 
 const remove = wrapper(async (req, res) => {
     const { id } = req.params;
@@ -183,7 +228,9 @@ const approve = wrapper(async (req, res) => {
 module.exports = {
     getAll,
     getOne,
+    getAuthClub,
     update,
+    update_password,
     remove,
     join,
     cancel,

@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import loginImg from "../assets/images/login.png";
-import RadioBtn from "../styled_components/RadioBtn";
+import RadioBtn from "../components/RadioBtn";
 
 const validateSchema = Yup.object().shape({
     email: Yup.string().email("Please enter a valid email.").required("Email is required."),
