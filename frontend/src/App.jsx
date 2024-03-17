@@ -31,6 +31,7 @@ import Attendance from "./pages/club_admin/Attendance";
 import SchoolSetting from "./pages/school_admin/Setting";
 import ClubSetting from "./pages/club_admin/Setting";
 import StudentSetting from "./pages/student/Setting";
+import SchoolAdminLayout from "./SchoolAdminLayout";
 
 export default function App() {
     return (
@@ -38,7 +39,7 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="login" element={<Login />} />
-                <Route path="school_admin">
+                <Route path="school_admin" element={<SchoolAdminLayout />}>
                     <Route path="dashboard" element={<SchoolDashboard />} />
                     <Route path="academic_years">
                         <Route index element={<AcademicYears />} />

@@ -1,3 +1,21 @@
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import InputAdornment from '@mui/material/InputAdornment';
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Alert from '@mui/material/Alert';
+
+import EmailIcon from '@mui/icons-material/EmailOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
 import { useRef, useState, useCallback } from "react";
 import { useAuth } from "../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -5,7 +23,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import loginImg from "../assets/images/login.png";
-import RadioBtn from "../components/RadioBtn";
 
 const validateSchema = Yup.object().shape({
     email: Yup.string().email("Please enter a valid email.").required("Email is required."),
@@ -13,6 +30,7 @@ const validateSchema = Yup.object().shape({
 });
 
 export default function Login() {
+    const [showPassword, setShowPassword] = useState(false);
     const emailRef = useRef();
     const passwordRef = useRef();
     const [loginErr, setLoginErr] = useState(false);
@@ -37,87 +55,155 @@ export default function Login() {
         [formik]
     );
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const email = emailRef.current.value;
+        const password = passwordRef.current.value;
+
+        (async () => {
+            const api = import.meta.env.VITE_API_URL;
+            const res = await fetch(`${api}/api/login`, {
+                method: "POST",
+                body: JSON.stringify({ email, password, role }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!res.ok) {
+                setLoginErr(true);
+                return false;
+            }
+
+            const data = await res.json();
+            localStorage.setItem("token", data.token);
+
+            fetch(`${api}/api/verify`, {
+                headers: {
+                    Authorization: `Bearer ${data.token}`,
+                },
+            })
+                .then(res => res.json())
+                .then(user => {
+                    setAuth(true);
+                    setAuthUser(user);
+
+                    if (user.role === "school_admin") {
+                        navigate("/school_admin/dashboard");
+                    } else if (user.role === "club_admin") {
+                        navigate("/club_admin/dashboard");
+                    } else if (user.role === "student") {
+                        navigate("/student/home");
+                    }
+                });
+        })();
+    }
+
     return (
-        <div className="bg-slate-100 flex justify-center items-center h-screen overflow-hidden">
-            <div className="w-1/2 h-screen hidden lg:block">
-                <img src={loginImg} alt="Login image" className="object-cover w-full h-full" />
-            </div>
-            <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
-                <h1 className="text-2xl font-semibold mb-4 text-center text-gradient">Welcome to Club4Stud</h1>
-                {loginErr && <div className="flex justify-center items-center bg-slate-200 p-2 rounded-md border-slate-500 border-[1px] mb-2 ">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-slate-500 mt-1">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-                    </svg>
-                    <p className="text-slate-600 pl-1.5">Incorrect email or password</p>
-                </div>}
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    const email = emailRef.current.value;
-                    const password = passwordRef.current.value;
-
-                    (async () => {
-                        const api = import.meta.env.VITE_API_URL;
-                        const res = await fetch(`${api}/api/login`, {
-                            method: "POST",
-                            body: JSON.stringify({ email, password, role }),
-                            headers: {
-                                "Content-Type": "application/json"
-                            }
-                        });
-
-                        if (!res.ok) {
-                            setLoginErr(true);
-                            return false;
-                        }
-
-                        const data = await res.json();
-                        localStorage.setItem("token", data.token);
-
-                        fetch(`${api}/api/verify`, {
-                            headers: {
-                                Authorization: `Bearer ${data.token}`,
-                            },
-                        })
-                            .then(res => res.json())
-                            .then(user => {
-                                setAuth(true);
-                                setAuthUser(user);
-
-                                if (user.role === "school_admin") {
-                                    navigate("/school_admin/dashboard");
-                                } else if (user.role === "club_admin") {
-                                    navigate("/club_admin/dashboard");
-                                } else if (user.role === "student") {
-                                    navigate("/student/home");
-                                }
-                            });
-                    })();
-                }}>
-                    <div className="mb-2">
-                        <p className="text-slate-600 font-semibold">Role</p>
-                        <RadioBtn text="student" label="Student" role={role} setRole={setRole} />
-                        <RadioBtn text="club_admin" label="Club Admin" role={role} setRole={setRole} />
-                        <RadioBtn text="school_admin" label="School Admin" role={role} setRole={setRole} />
-                    </div>
-                    <div className="mb-2">
-                        <label htmlFor="email" className="block text-slate-600 mb-2 font-semibold">Email</label>
-                        <input type="email" placeholder="name@example.com" className="w-full border border-slate-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" ref={emailRef} value={formik.values.email}
-                            onChange={(e) => handleChange("email", e.target.value)} />
-                        <p className="mt-1 text-slate-600 text-sm">
-                            {formik.errors.email}
-                        </p>
-                    </div>
-                    <div className="mb-6">
-                        <label htmlFor="password" className="block text-slate-600 mb-2 font-semibold">Password</label>
-                        <input type="password" className="w-full border border-slate-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" ref={passwordRef} value={formik.values.password}
-                            onChange={(e) => handleChange("password", e.target.value)} />
-                        <p className="mt-1 text-slate-600 text-sm">
-                            {formik.errors.password}
-                        </p>
-                    </div>
-                    <button type="submit" className="bg-gradient text-white font-semibold rounded-md py-2 px-4 w-full">Login</button>
-                </form>
-            </div>
-        </div>
-    )
+        <Grid container component="main" sx={{ height: "100vh" }}>
+            <CssBaseline />
+            <Grid
+                item
+                xs={false}
+                md={5}
+                lg={6}
+                sx={{
+                    backgroundImage: `url(${loginImg})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                }}
+            />
+            <Grid item xs={12} md={7} lg={6} component={Paper} square sx={{
+                backgroundColor: "site.background",
+            }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: "100vh",
+                        mx: { xs: 6, sm: 8, lg: 12 },
+                    }}
+                >
+                    <Typography component="h1" variant="h4" color="primary" mb={3}>
+                        Welcome to Club4Stud
+                    </Typography>
+                    {loginErr && <Alert severity="info" sx={{ width: "100%", mb: 2 }}>Incorrect email or password</Alert>}
+                    <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit}>
+                        <ToggleButtonGroup
+                            color="primary"
+                            value={role}
+                            exclusive
+                            onChange={(e, newRole) => setRole(newRole)}
+                            sx={{
+                                mb: 2
+                            }}
+                        >
+                            <ToggleButton value="student">Student</ToggleButton>
+                            <ToggleButton value="club_admin">Club Admin</ToggleButton>
+                            <ToggleButton value="school_admin">School Admin</ToggleButton>
+                        </ToggleButtonGroup>
+                        <TextField
+                            variant="standard"
+                            margin="normal"
+                            fullWidth
+                            label="Email Address"
+                            autoFocus
+                            type="email"
+                            placeholder="name@example.com"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <EmailIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                            inputRef={emailRef}
+                            value={formik.values.email}
+                            onChange={(e) => handleChange("email", e.target.value)}
+                            helperText={formik.errors.email}
+                        />
+                        <TextField
+                            variant="standard"
+                            margin="normal"
+                            fullWidth
+                            label="Password"
+                            type={showPassword ? 'text' : 'password'}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <LockOutlinedIcon />
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position="end" >
+                                        <IconButton
+                                            onClick={() => setShowPassword((show) => !show)}
+                                            onMouseDown={(e) => e.preventDefault()}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                            inputRef={passwordRef} value={formik.values.password}
+                            onChange={(e) => handleChange("password", e.target.value)}
+                            helperText={formik.errors.password}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2, color: "light.main" }}
+                        >
+                            Login
+                        </Button>
+                    </Box>
+                </Box>
+            </Grid>
+        </Grid >
+    );
 }
