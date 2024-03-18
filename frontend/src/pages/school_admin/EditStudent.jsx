@@ -26,6 +26,14 @@ export default function EditStudent() {
     const [student, setStudent] = useState({});
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "school_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         (async () => {
             const api = import.meta.env.VITE_API_URL;
             const token = localStorage.getItem("token");

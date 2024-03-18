@@ -7,6 +7,14 @@ export default function Attendance() {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "club_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         dispatch(getAttendance());
     }, []);
 

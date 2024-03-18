@@ -25,6 +25,14 @@ export default function EditSchedule() {
     const [schedule, setSchedule] = useState({});
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "club_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         (async () => {
             const api = import.meta.env.VITE_API_URL;
             const token = localStorage.getItem("token");

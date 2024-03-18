@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -21,6 +21,16 @@ export default function AddSchedule() {
     const locationRef = useRef();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "club_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+    }, []);
 
     const formik = useFormik({
         initialValues: {

@@ -77,6 +77,7 @@ export default function Login() {
 
             const data = await res.json();
             localStorage.setItem("token", data.token);
+            localStorage.setItem("role", role);
 
             fetch(`${api}/api/verify`, {
                 headers: {
@@ -130,7 +131,7 @@ export default function Login() {
                     <Typography component="h1" variant="h4" color="primary" mb={3}>
                         Welcome to Club4Stud
                     </Typography>
-                    {loginErr && <Alert severity="info" sx={{ width: "100%", mb: 2 }}>Incorrect email or password</Alert>}
+                    {loginErr && <Alert severity="info" sx={{ width: "100%", mb: 2 }}>Incorrect role, email or password</Alert>}
                     <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit}>
                         <ToggleButtonGroup
                             color="primary"

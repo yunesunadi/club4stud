@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Error from "./pages/Error";
 import SchoolDashboard from "./pages/school_admin/Dashboard";
@@ -38,7 +38,6 @@ export default function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Login />} />
-                <Route path="login" element={<Login />} />
                 <Route path="school_admin" element={<SchoolAdminLayout />}>
                     <Route path="dashboard" element={<SchoolDashboard />} />
                     <Route path="academic_years">

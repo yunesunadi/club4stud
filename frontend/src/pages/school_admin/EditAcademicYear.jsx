@@ -16,6 +16,28 @@ export default function EditAcademicYear() {
     const [academicYear, setAcademicYear] = useState({});
     const nameRef = useRef();
 
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "school_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
+        (async () => {
+            const api = import.meta.env.VITE_API_URL;
+            const token = localStorage.getItem("token");
+            const res = await fetch(`${api}/api/academic_years/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const { data } = await res.json();
+            setAcademicYear(data);
+        })();
+    }, []);
+
     const formik = useFormik({
         initialValues: {
             name: ""
@@ -31,20 +53,6 @@ export default function EditAcademicYear() {
             }),
         [formik]
     );
-
-    useEffect(() => {
-        (async () => {
-            const api = import.meta.env.VITE_API_URL;
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${api}/api/academic_years/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const { data } = await res.json();
-            setAcademicYear(data);
-        })();
-    }, []);
 
     return (
         <form

@@ -13,6 +13,14 @@ export default function Clubs() {
     const { authUser } = useAuth();
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "student") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         dispatch(getAll());
         dispatch(getRequested());
     }, []);

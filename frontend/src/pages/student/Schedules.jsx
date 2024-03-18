@@ -7,6 +7,14 @@ export default function Schedules() {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "student") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         dispatch(getJoined());
     }, []);
 

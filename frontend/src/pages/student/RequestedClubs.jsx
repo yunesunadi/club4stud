@@ -9,6 +9,14 @@ export default function RequestedClubs() {
     const { authUser } = useAuth();
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "student") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         dispatch(getRequested());
     }, []);
 

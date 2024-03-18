@@ -25,10 +25,17 @@ export default function AddBatch() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [gender, setGender] = useState("Male");
-    const [password, setPassword] = useState("");
     const { batches } = useSelector((store) => store.batch);
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "school_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         dispatch(getAll());
     }, []);
 

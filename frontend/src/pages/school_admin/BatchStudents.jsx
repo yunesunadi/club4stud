@@ -9,6 +9,14 @@ export default function BatchStudents() {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "school_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         dispatch(getBatchAll());
     }, []);
 

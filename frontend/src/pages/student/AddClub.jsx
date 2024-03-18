@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -34,6 +34,16 @@ export default function AddClub() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { authUser } = useAuth();
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "student") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+    }, []);
 
     const formik = useFormik({
         initialValues: {

@@ -9,6 +9,14 @@ export default function JoinedMembers() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "club_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         dispatch(getJoinedMembers());
     }, []);
 

@@ -22,6 +22,14 @@ export default function EditBatch() {
     const { academicYears } = useSelector((store) => store.academicYear);
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "school_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
         (async () => {
             const api = import.meta.env.VITE_API_URL;
             const token = localStorage.getItem("token");
