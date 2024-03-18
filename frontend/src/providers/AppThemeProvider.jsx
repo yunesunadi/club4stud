@@ -20,6 +20,8 @@ export default function AppThemeProvider({ children }) {
                 },
                 secondary: {
                     main: grey[700],
+                    light: grey[300],
+                    dark: grey[800],
                 },
                 background: {
                     main: grey[100],

@@ -8,15 +8,17 @@ import Tooltip from '@mui/material/Tooltip';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from "../../providers/AuthProvider";
+import { useAppTheme } from '../../providers/AppThemeProvider';
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
     const { setAuth, setAuthUser } = useAuth();
+    const { mode } = useAppTheme();
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -53,6 +55,7 @@ export default function AccountMenu() {
                     paper: {
                         elevation: 0,
                         sx: {
+                            backgroundColor: "site.secondary",
                             overflow: 'visible',
                             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
                             mt: 1.5,
@@ -80,15 +83,20 @@ export default function AccountMenu() {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={() => {
-                    handleClose();
-                    navigate("setting");
-                }} sx={{ color: "site.text" }}>
-                    <ListItemIcon>
-                        <Settings fontSize="small" />
-                    </ListItemIcon>
-                    Setting
-                </MenuItem>
+                <Box sx={{
+                    "& a.active .MuiButtonBase-root": {
+                        backgroundColor: mode === "light" ? "secondary.light" : "secondary.dark",
+                    },
+                }}>
+                    <NavLink to="setting" style={{ textDecoration: "none" }}>
+                        <MenuItem sx={{ color: "site.text", }}>
+                            <ListItemIcon>
+                                <Settings fontSize="small" />
+                            </ListItemIcon>
+                            Setting
+                        </MenuItem>
+                    </NavLink>
+                </Box>
                 <MenuItem onClick={() => {
                     setAuth(false);
                     setAuthUser({});

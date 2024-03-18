@@ -32,6 +32,7 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { useState } from "react";
 import AccountMenu from "./components/school_admin/AccountMenu";
 import ModeSwitch from "./components/school_admin/ModeSwitch";
+import { useAppTheme } from "./providers/AppThemeProvider";
 
 const openedMixin = (theme) => ({
     width: 210,
@@ -110,6 +111,8 @@ export default function SchoolAdminLayout() {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up("md"));
 
+    const { mode } = useAppTheme();
+
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
@@ -180,6 +183,9 @@ export default function SchoolAdminLayout() {
                             key={textLabel}
                             sx={{
                                 "&:first-of-type": { pt: 1.5 },
+                                "& a.active .MuiListItemButton-root": {
+                                    backgroundColor: mode === "light" ? "secondary.light" : "secondary.dark",
+                                },
                             }}
                         >
                             <NavLink to={url} style={{ textDecoration: "none" }}>
@@ -202,12 +208,15 @@ export default function SchoolAdminLayout() {
                                             {icon}
                                         </ListItemIcon>
                                         {
-                                            matches && <ListItemText
-                                                primary={textLabel}
-                                                primaryTypographyProps={{
-                                                    color: "site.text",
-                                                }}
-                                            />
+                                            matches && (
+
+                                                <ListItemText
+                                                    primary={textLabel}
+                                                    primaryTypographyProps={{
+                                                        color: "site.text",
+                                                    }}
+                                                />
+                                            )
                                         }
                                     </ListItemButton>
                                 </ListItem>
@@ -229,6 +238,6 @@ export default function SchoolAdminLayout() {
                 <Toolbar />
                 <Outlet />
             </Box>
-        </Box>
+        </Box >
     )
 }
