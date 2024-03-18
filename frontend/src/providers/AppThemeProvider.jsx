@@ -1,7 +1,7 @@
 import { ThemeProvider, createTheme, responsiveFontSizes } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useMemo, useState, createContext, useContext } from 'react';
-import { blueGrey, grey, cyan } from '@mui/material/colors';
+import { grey, cyan } from '@mui/material/colors';
 
 const AppThemeContext = createContext();
 
@@ -19,7 +19,10 @@ export default function AppThemeProvider({ children }) {
                     main: cyan[500],
                 },
                 secondary: {
-                    main: grey[500],
+                    main: grey[700],
+                },
+                background: {
+                    main: grey[100],
                 },
                 light: {
                     main: "#fff"
@@ -27,10 +30,10 @@ export default function AppThemeProvider({ children }) {
                 mode,
                 ...(mode === "light"
                     ? {
-                        site: { background: grey[100] }
+                        site: { primary: cyan[500], secondary: grey[100], text: grey[700] }
                     }
                     : {
-                        site: { background: blueGrey[900] }
+                        site: { primary: grey[900], secondary: grey[900], text: "#fff" }
                     }),
             },
             typography: {

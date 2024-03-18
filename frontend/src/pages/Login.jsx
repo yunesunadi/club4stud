@@ -116,7 +116,7 @@ export default function Login() {
                 }}
             />
             <Grid item xs={12} md={7} lg={6} component={Paper} square sx={{
-                backgroundColor: "site.background",
+                backgroundColor: "background.main",
             }}>
                 <Box
                     sx={{
