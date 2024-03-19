@@ -135,7 +135,7 @@ export default function SchoolAdminLayout() {
                             },
                         }}
                     >
-                        <Link to="/" style={{ textDecoration: "none" }}>
+                        <Link to="/school_admin/dashboard" style={{ textDecoration: "none" }}>
                             <Box
                                 sx={{
                                     cursor: "pointer",
@@ -145,12 +145,11 @@ export default function SchoolAdminLayout() {
                                 alignItems="center"
                                 columnGap={0.5}
                                 mt={0.3}
-                                color="light.main"
+                                color="site.logo"
                             >
                                 <FeaturedPlayListOutlinedIcon />
                                 <Typography
                                     variant="h6"
-                                    width={100}
                                     component="h1"
                                 >
                                     Club4Stud
@@ -233,6 +232,7 @@ export default function SchoolAdminLayout() {
                     marginLeft: { xl: `calc(50vw - 770px)` },
                     marginRight: { xs: 2, sm: 0, xl: `calc(50vw - 770px)` },
                     width: "100%",
+                    overflowX: "hidden",
                 }}
             >
                 <Toolbar />

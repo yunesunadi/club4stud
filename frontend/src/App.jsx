@@ -42,8 +42,8 @@ export default function App() {
                     <Route path="dashboard" element={<SchoolDashboard />} />
                     <Route path="academic_years">
                         <Route index element={<AcademicYears />} />
-                        <Route path="create" element={<AddAcademicYear />} />
-                        <Route path="edit/:id" element={<EditAcademicYear />} />
+                        {/* <Route path="create" element={<AddAcademicYear />} /> */}
+                        {/* <Route path="edit/:id" element={<EditAcademicYear />} /> */}
                     </Route>
                     <Route path="batches">
                         <Route index element={<Batches />} />

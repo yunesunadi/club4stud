@@ -32,10 +32,10 @@ export default function AppThemeProvider({ children }) {
                 mode,
                 ...(mode === "light"
                     ? {
-                        site: { primary: cyan[500], secondary: grey[100], text: grey[700] }
+                        site: { primary: cyan[500], logo: "#fff", secondary: grey[100], text: grey[700] }
                     }
                     : {
-                        site: { primary: grey[900], secondary: grey[900], text: "#fff" }
+                        site: { primary: grey[900], logo: cyan[500], secondary: grey[900], text: "#fff" }
                     }),
             },
             typography: {
