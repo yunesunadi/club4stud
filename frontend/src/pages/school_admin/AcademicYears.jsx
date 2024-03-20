@@ -13,12 +13,13 @@ import {
     GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAll, add, update, remove } from "../../features/academicYear/academicYearSlice";
 import { format } from "date-fns";
 import { v4 as uuidv4 } from 'uuid';
 import { Typography } from "@mui/material";
+import AlertSnackBar from "../../components/school_admin/AlertSnackBar";
 
 function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
@@ -55,6 +56,9 @@ export default function FullFeaturedCrudGrid() {
     const { academicYears } = useSelector((store) => store.academicYear);
     const dispatch = useDispatch();
 
+    const [errors, setErrors] = useState([]);
+    const [showAlert, setShowAlert] = useState(false);
+
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
             event.defaultMuiPrevented = true;
@@ -90,7 +94,16 @@ export default function FullFeaturedCrudGrid() {
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
 
-        if (!newRow.name) return false;
+        if (!newRow.name) {
+            setErrors(["Name is required."]);
+
+            const editedRow = rows.find((row) => row.id === newRow.id);
+            if (editedRow.isNew) {
+                setRows(rows.filter((row) => row.id !== newRow.id));
+            }
+
+            return false;
+        }
 
         if (newRow.isNew) {
             dispatch(add(newRow.name));
@@ -104,6 +117,11 @@ export default function FullFeaturedCrudGrid() {
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
+
+    const handleProcessRowUpdateError = useCallback((error) => {
+        setShowAlert(true);
+    }, []);
+
 
     const columns = [
         {
@@ -133,7 +151,7 @@ export default function FullFeaturedCrudGrid() {
             headerName: "Actions",
             width: 100,
             cellClassName: "actions",
-            getActions: ({ id, name }) => {
+            getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
                 if (isInEditMode) {
@@ -144,7 +162,7 @@ export default function FullFeaturedCrudGrid() {
                             sx={{
                                 color: "primary.main",
                             }}
-                            onClick={handleSaveClick(id, name)}
+                            onClick={handleSaveClick(id)}
                         />,
                         <GridActionsCellItem
                             icon={<CancelIcon color="primary" />}
@@ -199,6 +217,7 @@ export default function FullFeaturedCrudGrid() {
 
     return (
         <>
+            {errors && <AlertSnackBar errors={errors} showAlert={showAlert} setShowAlert={setShowAlert} />}
             <Typography color="primary" component="h1" variant="h5" mb={2}>Academic Years</Typography>
             <Box
                 sx={{
@@ -220,15 +239,14 @@ export default function FullFeaturedCrudGrid() {
                     onRowModesModelChange={handleRowModesModelChange}
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
+                    onProcessRowUpdateError={handleProcessRowUpdateError}
                     slots={{
                         toolbar: EditToolbar,
                     }}
                     slotProps={{
                         toolbar: { setRows, setRowModesModel },
                     }}
-
                     disableRowSelectionOnClick
-
                 />
             </Box>
         </>
