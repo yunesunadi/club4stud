@@ -35,12 +35,11 @@ const insert = wrapper(async (req, res) => {
     }
 
     const hash = await bcrypt.hash(default_password, 10);
-    const academic_year_id = new ObjectId(academic_year);
     const result = await batches.insertOne({
         name,
         founded_date,
         default_password: hash,
-        academic_year: academic_year_id,
+        academic_year,
         created_at: formatISO(new Date()),
         updated_at: formatISO(new Date())
     });
@@ -66,7 +65,7 @@ const update = wrapper(async (req, res) => {
                 $set: {
                     name,
                     founded_date,
-                    default_password: hash,
+                    default_password,
                     academic_year,
                     updated_at: formatISO(new Date())
                 }
