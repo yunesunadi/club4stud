@@ -47,11 +47,11 @@ export default function App() {
                     </Route>
                     <Route path="batches">
                         <Route index element={<Batches />} />
-                        <Route path="create" element={<AddBatch />} />
-                        <Route path="edit/:id" element={<EditBatch />} />
+                        {/* <Route path="create" element={<AddBatch />} /> */}
+                        {/* <Route path="edit/:id" element={<EditBatch />} /> */}
                         <Route path="students/:id" element={<BatchStudents />} />
-                        <Route path="students/create/:id" element={<AddStudent />} />
-                        <Route path="students/:bid/edit/:id" element={<EditStudent />} />
+                        {/* <Route path="students/create/:id" element={<AddStudent />} /> */}
+                        {/* <Route path="students/:bid/edit/:id" element={<EditStudent />} /> */}
                     </Route>
                     <Route path="students">
                         <Route index element={<Students />} />

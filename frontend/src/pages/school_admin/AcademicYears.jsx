@@ -49,7 +49,7 @@ function EditToolbar(props) {
     );
 }
 
-export default function FullFeaturedCrudGrid() {
+export default function AcademicYears() {
     const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = useState({});
 
@@ -58,6 +58,30 @@ export default function FullFeaturedCrudGrid() {
 
     const [errors, setErrors] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "school_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
+        dispatch(getAll());
+    }, []);
+
+    useEffect(() => {
+        setRows(academicYears.map((acy, index) => {
+            return {
+                id: uuidv4(),
+                no: index + 1,
+                ...acy,
+                created_at: format(acy.created_at, "hh:mm:ss a, MMM d, y"),
+                updated_at: format(acy.updated_at, "hh:mm:ss a, MMM d, y")
+            };
+        }));
+    }, [academicYears]);
 
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -75,7 +99,7 @@ export default function FullFeaturedCrudGrid() {
 
     const handleDeleteClick = (id) => () => {
         setRows(rows.filter((row) => row.id !== id));
-        dispatch(remove(rows.filter((row) => row.id === id)[0]._id));
+        dispatch(remove(rows.find((row) => row.id === id)._id));
     };
 
     const handleCancelClick = (id) => () => {
@@ -189,31 +213,6 @@ export default function FullFeaturedCrudGrid() {
             },
         },
     ];
-
-    useEffect(() => {
-        if (localStorage.getItem("token")) {
-            if (localStorage.getItem("role") !== "school_admin") {
-                navigate("/");
-            }
-        } else {
-            navigate("/");
-        }
-
-        dispatch(getAll());
-    }, []);
-
-    useEffect(() => {
-        setRows(academicYears.map((acy, index) => {
-            return {
-                id: uuidv4(),
-                no: index + 1,
-                ...acy,
-                created_at: format(acy.created_at, "hh:mm:ss a, MMM d, y"),
-                updated_at: format(acy.updated_at, "hh:mm:ss a, MMM d, y")
-            };
-        }));
-    }, [academicYears]);
-
 
     return (
         <>

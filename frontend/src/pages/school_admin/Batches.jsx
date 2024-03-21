@@ -5,6 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import {
     GridRowModes,
     DataGrid,
@@ -21,18 +22,46 @@ import { format } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 import { Typography } from "@mui/material";
 import AlertSnackBar from "../../components/school_admin/AlertSnackBar";
+import { useNavigate } from "react-router-dom";
 
-export default function FullFeaturedCrudGrid() {
+export default function Batches() {
     const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = useState({});
 
     const { batches } = useSelector((store) => store.batch);
     const { academicYears } = useSelector((store) => store.academicYear);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [errors, setErrors] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [isNewItem, setIsNewItem] = useState(false);
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            if (localStorage.getItem("role") !== "school_admin") {
+                navigate("/");
+            }
+        } else {
+            navigate("/");
+        }
+
+        dispatch(getAll());
+        dispatch(getAcademicYears());
+    }, []);
+
+    useEffect(() => {
+        setRows(batches.map((acy, index) => {
+            return {
+                id: uuidv4(),
+                no: index + 1,
+                ...acy,
+                founded_date: new Date(acy.founded_date),
+                created_at: format(acy.created_at, "hh:mm:ss a, MMM d, y"),
+                updated_at: format(acy.updated_at, "hh:mm:ss a, MMM d, y")
+            };
+        }));
+    }, [batches]);
 
     function EditToolbar(props) {
         const { setRows, setRowModesModel } = props;
@@ -82,7 +111,7 @@ export default function FullFeaturedCrudGrid() {
 
     const handleDeleteClick = (id) => () => {
         setRows(rows.filter((row) => row.id !== id));
-        dispatch(remove(rows.filter((row) => row.id === id)[0]._id));
+        dispatch(remove(rows.find((row) => row.id === id)._id));
     };
 
     const handleCancelClick = (id) => () => {
@@ -96,6 +125,10 @@ export default function FullFeaturedCrudGrid() {
             setRows(rows.filter((row) => row.id !== id));
         }
     };
+
+    const handleNavigate = (id) => () => {
+        navigate(`students/${rows.find((row) => row.id === id)._id}`);
+    }
 
     const processRowUpdate = (newRow) => {
         const updatedRow = { ...newRow, isNew: false };
@@ -201,7 +234,7 @@ export default function FullFeaturedCrudGrid() {
             field: "actions",
             type: "actions",
             headerName: "Actions",
-            width: 100,
+            width: 130,
             cellClassName: "actions",
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -227,6 +260,12 @@ export default function FullFeaturedCrudGrid() {
 
                 return [
                     <GridActionsCellItem
+                        icon={<VisibilityOutlinedIcon color="primary" />}
+                        label="View"
+                        className="textPrimary"
+                        onClick={handleNavigate(id)}
+                    />,
+                    <GridActionsCellItem
                         icon={<EditIcon color="primary" />}
                         label="Edit"
                         className="textPrimary"
@@ -241,33 +280,6 @@ export default function FullFeaturedCrudGrid() {
             },
         },
     ];
-
-    useEffect(() => {
-        if (localStorage.getItem("token")) {
-            if (localStorage.getItem("role") !== "school_admin") {
-                navigate("/");
-            }
-        } else {
-            navigate("/");
-        }
-
-        dispatch(getAll());
-        dispatch(getAcademicYears());
-    }, []);
-
-    useEffect(() => {
-        setRows(batches.map((acy, index) => {
-            return {
-                id: uuidv4(),
-                no: index + 1,
-                ...acy,
-                founded_date: new Date(acy.founded_date),
-                created_at: format(acy.created_at, "hh:mm:ss a, MMM d, y"),
-                updated_at: format(acy.updated_at, "hh:mm:ss a, MMM d, y")
-            };
-        }));
-    }, [batches]);
-
 
     return (
         <>
