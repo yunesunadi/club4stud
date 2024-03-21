@@ -14,10 +14,8 @@ import {
     ListItemText,
 } from "@mui/material";
 
-import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import FeaturedPlayListOutlinedIcon from '@mui/icons-material/FeaturedPlayListOutlined';
-import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
@@ -30,7 +28,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useState } from "react";
-import AccountMenu from "./components/school_admin/AccountMenu";
+import AccountMenu from "./components/student/AccountMenu";
 import ModeSwitch from "./components/ModeSwitch";
 import { useAppTheme } from "./providers/AppThemeProvider";
 
@@ -74,38 +72,18 @@ const Drawer = styled(MuiDrawer, {
 
 const listItems = [
     {
-        icon: <DashboardOutlinedIcon />,
-        textLabel: "Dashboard",
-        url: "dashboard",
-    },
-    {
-        icon: <SchoolOutlinedIcon />,
-        textLabel: "Academic Years",
-        url: "academic_years",
-    },
-    {
-        icon: <FeaturedPlayListOutlinedIcon />,
-        textLabel: "Batches",
-        url: "batches",
-    },
-    {
-        icon: <ContactsOutlinedIcon />,
-        textLabel: "Students",
-        url: "students",
+        icon: <CalendarMonthOutlinedIcon />,
+        textLabel: "Schedules",
+        url: "schedules",
     },
     {
         icon: <GroupsOutlinedIcon />,
         textLabel: "Clubs",
         url: "clubs",
     },
-    {
-        icon: <DescriptionOutlinedIcon />,
-        textLabel: "Club Proposals",
-        url: "club_proposals",
-    },
 ];
 
-export default function SchoolAdminLayout() {
+export default function StudentLayout() {
     const [desktopOpen, setDesktopOpen] = useState(true);
 
     const theme = useTheme();
@@ -135,7 +113,7 @@ export default function SchoolAdminLayout() {
                             },
                         }}
                     >
-                        <Link to="/school_admin/dashboard" style={{ textDecoration: "none" }}>
+                        <Link to="/student/schedules" style={{ textDecoration: "none" }}>
                             <Box
                                 sx={{
                                     cursor: "pointer",

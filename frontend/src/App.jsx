@@ -26,6 +26,7 @@ import SchoolSetting from "./pages/school_admin/Setting";
 import ClubSetting from "./pages/club_admin/Setting";
 import StudentSetting from "./pages/student/Setting";
 import SchoolAdminLayout from "./SchoolAdminLayout";
+import StudentLayout from "./StudentLayout";
 
 export default function App() {
     return (
@@ -58,7 +59,7 @@ export default function App() {
                     <Route path="clubs" element={<SchoolClubs />} />
                     <Route path="setting" element={<SchoolSetting />} />
                 </Route>
-                <Route path="student">
+                <Route path="student" element={<StudentLayout />}>
                     <Route path="home" element={<Home />} />
                     <Route path="clubs">
                         <Route index element={<StudentClubs />} />
