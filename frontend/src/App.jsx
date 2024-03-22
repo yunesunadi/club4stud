@@ -27,6 +27,7 @@ import ClubSetting from "./pages/club_admin/Setting";
 import StudentSetting from "./pages/student/Setting";
 import SchoolAdminLayout from "./SchoolAdminLayout";
 import StudentLayout from "./StudentLayout";
+import ClubAdminLayout from "./ClubAdminLayout";
 
 export default function App() {
     return (
@@ -71,7 +72,7 @@ export default function App() {
                     </Route>
                     <Route path="setting" element={<StudentSetting />} />
                 </Route>
-                <Route path="club_admin">
+                <Route path="club_admin" element={<ClubAdminLayout />}>
                     <Route path="dashboard" element={<ClubDashboard />} />
                     <Route path="club">
                         <Route path="members">

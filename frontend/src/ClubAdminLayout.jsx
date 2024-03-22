@@ -14,9 +14,10 @@ import {
     ListItemText,
 } from "@mui/material";
 
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import FeaturedPlayListOutlinedIcon from '@mui/icons-material/FeaturedPlayListOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 
 import { styled } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
@@ -27,7 +28,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useState } from "react";
-import AccountMenu from "./components/student/AccountMenu";
+import AccountMenu from "./components/club_admin/AccountMenu";
 import ModeSwitch from "./components/ModeSwitch";
 import { useAppTheme } from "./providers/AppThemeProvider";
 
@@ -71,18 +72,23 @@ const Drawer = styled(MuiDrawer, {
 
 const listItems = [
     {
+        icon: <DashboardOutlinedIcon />,
+        textLabel: "Dashboard",
+        url: "dashboard",
+    },
+    {
         icon: <CalendarMonthOutlinedIcon />,
         textLabel: "Schedules",
-        url: "schedules",
+        url: "club/schedules",
     },
     {
         icon: <GroupsOutlinedIcon />,
-        textLabel: "Clubs",
-        url: "clubs",
+        textLabel: "Members",
+        url: "club/members",
     },
 ];
 
-export default function StudentLayout() {
+export default function ClubAdminLayout() {
     const [desktopOpen, setDesktopOpen] = useState(true);
 
     const theme = useTheme();
@@ -112,7 +118,7 @@ export default function StudentLayout() {
                             },
                         }}
                     >
-                        <Link to="/student/schedules" style={{ textDecoration: "none" }}>
+                        <Link to="/club_admin/dashboard" style={{ textDecoration: "none" }}>
                             <Box
                                 sx={{
                                     cursor: "pointer",

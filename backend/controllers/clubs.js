@@ -77,7 +77,9 @@ const getMembers = wrapper(async (req, res) => {
                     $push: {
                         student: "$members.student",
                         request: "$members.request",
-                        approve: "$members.approve"
+                        approve: "$members.approve",
+                        created_at: "$members.created_at",
+                        updated_at: "$members.updated_at",
                     }
                 },
             }

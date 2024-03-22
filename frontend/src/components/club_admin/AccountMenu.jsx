@@ -9,7 +9,7 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { Typography } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from "../../providers/AuthProvider";
 import { useAppTheme } from '../../providers/AppThemeProvider';
 
@@ -17,17 +17,8 @@ export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
-    const { setAuth, authUser, setAuthUser } = useAuth();
+    const { setAuth, setAuthUser } = useAuth();
     const { mode } = useAppTheme();
-    const [authName, setAuthName] = useState("");
-
-    useEffect(() => {
-        setAuthName(authUser.name || localStorage.getItem("authName"));
-
-        if (!localStorage.getItem("authName") || localStorage.getItem("authName") !== authUser.name) {
-            localStorage.setItem("authName", authUser.name);
-        }
-    }, [authUser.name]);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -49,7 +40,7 @@ export default function AccountMenu() {
                         aria-expanded={open ? 'true' : undefined}
                     >
                         <Avatar sx={{ width: 32, height: 32, bgcolor: "light.main" }}>
-                            <Typography color="secondary" fontWeight="bold">{authName[0]}</Typography>
+                            <Typography color="secondary" fontWeight="bold">C</Typography>
                         </Avatar>
                     </IconButton>
                 </Tooltip>
