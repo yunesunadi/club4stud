@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
 import {
     DataGrid,
     GridToolbar
@@ -13,7 +14,7 @@ import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function BatchStudents() {
-    const { students } = useSelector((store) => store.student);
+    const { isLoading, students } = useSelector((store) => store.student);
     const { batches } = useSelector((store) => store.batch);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -87,38 +88,45 @@ export default function BatchStudents() {
     return (
         <>
             <Typography color="primary" component="h1" variant="h5" mb={2}>Students</Typography>
-            <Box sx={{ height: "80vh", width: "100%" }}>
-                <DataGrid
-                    rows={students.map((student, index) => {
-                        return {
-                            id: student._id,
-                            no: index + 1,
-                            ...student,
-                            batch_name: batches.find(batch => batch._id === student.batch)?.name,
-                            date_of_birth: format(student.date_of_birth, "hh:mm:ss a, MMM d, y"),
-                            created_at: format(student.created_at, "hh:mm:ss a, MMM d, y"),
-                            updated_at: format(student.updated_at, "hh:mm:ss a, MMM d, y")
-                        };
-                    })}
-                    columns={columns}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-                                pageSize: 5,
+            {isLoading && (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <CircularProgress />
+                </Box>
+            )}
+            {!isLoading && (
+                <Box sx={{ height: "80vh", width: "100%" }}>
+                    <DataGrid
+                        rows={students.map((student, index) => {
+                            return {
+                                id: student._id,
+                                no: index + 1,
+                                ...student,
+                                batch_name: batches.find(batch => batch._id === student.batch)?.name,
+                                date_of_birth: format(student.date_of_birth, "hh:mm:ss a, MMM d, y"),
+                                created_at: format(student.created_at, "hh:mm:ss a, MMM d, y"),
+                                updated_at: format(student.updated_at, "hh:mm:ss a, MMM d, y")
+                            };
+                        })}
+                        columns={columns}
+                        initialState={{
+                            pagination: {
+                                paginationModel: {
+                                    pageSize: 5,
+                                },
                             },
-                        },
-                    }}
-                    pageSizeOptions={[5]}
-                    slots={{ toolbar: GridToolbar }}
-                    slotProps={{
-                        toolbar: {
-                            showQuickFilter: true,
-                        },
-                    }}
-                    disableRowSelectionOnClick
-                    disableDensitySelector
-                />
-            </Box>
+                        }}
+                        pageSizeOptions={[5]}
+                        slots={{ toolbar: GridToolbar }}
+                        slotProps={{
+                            toolbar: {
+                                showQuickFilter: true,
+                            },
+                        }}
+                        disableRowSelectionOnClick
+                        disableDensitySelector
+                    />
+                </Box>
+            )}
         </>
     );
 }

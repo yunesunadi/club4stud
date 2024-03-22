@@ -140,7 +140,14 @@ export default function AddClub() {
                     onChange={(e) => handleChange("founded_date", e.target.value)}
                     helperText={formik.errors.founded_date}
                     sx={{
-                        width: { xs: "100%", sm: 500 }
+                        width: { xs: "100%", sm: 500 },
+                        "& label.Mui-focused": {
+                            color: "secondary.main",
+                        },
+                        "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "secondary.light",
+                            borderWidth: 1.5,
+                        },
                     }}
                     margin="normal"
                     focused

@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -28,7 +29,7 @@ export default function Batches() {
     const [rows, setRows] = useState([]);
     const [rowModesModel, setRowModesModel] = useState({});
 
-    const { batches } = useSelector((store) => store.batch);
+    const { isLoading, batches } = useSelector((store) => store.batch);
     const { academicYears } = useSelector((store) => store.academicYear);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -46,8 +47,8 @@ export default function Batches() {
             navigate("/");
         }
 
-        dispatch(getAll());
         dispatch(getAcademicYears());
+        dispatch(getAll());
     }, []);
 
     useEffect(() => {
@@ -285,36 +286,43 @@ export default function Batches() {
         <>
             {errors && <AlertSnackBar errors={errors} showAlert={showAlert} setShowAlert={setShowAlert} />}
             <Typography color="primary" component="h1" variant="h5" mb={2}>Batches</Typography>
-            <Box
-                sx={{
-                    height: 400,
-                    width: "100%",
-                    "& .actions": {
-                        color: "text.secondary",
-                    },
-                    "& .textPrimary": {
-                        color: "text.primary",
-                    },
-                }}
-            >
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    editMode="row"
-                    rowModesModel={rowModesModel}
-                    onRowModesModelChange={handleRowModesModelChange}
-                    onRowEditStop={handleRowEditStop}
-                    processRowUpdate={processRowUpdate}
-                    onProcessRowUpdateError={handleProcessRowUpdateError}
-                    slots={{
-                        toolbar: EditToolbar,
+            {isLoading && (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <CircularProgress />
+                </Box>
+            )}
+            {!isLoading && (
+                <Box
+                    sx={{
+                        height: 400,
+                        width: "100%",
+                        "& .actions": {
+                            color: "text.secondary",
+                        },
+                        "& .textPrimary": {
+                            color: "text.primary",
+                        },
                     }}
-                    slotProps={{
-                        toolbar: { setRows, setRowModesModel },
-                    }}
-                    disableRowSelectionOnClick
-                />
-            </Box>
+                >
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        editMode="row"
+                        rowModesModel={rowModesModel}
+                        onRowModesModelChange={handleRowModesModelChange}
+                        onRowEditStop={handleRowEditStop}
+                        processRowUpdate={processRowUpdate}
+                        onProcessRowUpdateError={handleProcessRowUpdateError}
+                        slots={{
+                            toolbar: EditToolbar,
+                        }}
+                        slotProps={{
+                            toolbar: { setRows, setRowModesModel },
+                        }}
+                        disableRowSelectionOnClick
+                    />
+                </Box>
+            )}
         </>
     );
 }
