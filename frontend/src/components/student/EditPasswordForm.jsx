@@ -11,11 +11,7 @@ import { updatePassword } from "../../features/student/studentSlice";
 
 const validateSchema = Yup.object().shape({
     old_password: Yup.string()
-        .required("Old password is required.")
-        .min(8, "Old password must be 8 or more characters.")
-        .matches(/(?=.*[a-z])(?=.*[A-Z])\w+/, "Old password should contain at least one uppercase and lowercase character.")
-        .matches(/\d/, "Old password should contain at least one number.")
-        .matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, "Old password should contain at least one special character."),
+        .required("Old password is required."),
     new_password: Yup.string()
         .required("New password is required.")
         .min(8, "New password must be 8 or more characters.")

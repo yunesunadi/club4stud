@@ -94,7 +94,7 @@ export default function Login() {
                     } else if (user.role === "club_admin") {
                         navigate("/club_admin/dashboard");
                     } else if (user.role === "student") {
-                        navigate("/student/home");
+                        navigate("/student/schedules");
                     }
                 });
         })();

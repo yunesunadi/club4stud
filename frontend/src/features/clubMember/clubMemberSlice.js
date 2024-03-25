@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const initialState = {
     isLoading: true,
     requestedClubs: [],
+    joinedClubs: [],
     clubMembers: [],
     joinedMembers: [],
 };
@@ -13,6 +14,20 @@ export const getRequested = createAsyncThunk(
     "clubMember/getRequested",
     async () => {
         const res = await fetch(`${api}/api/club_members/clubs/requested`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const { data } = await res.json();
+
+        return data;
+    }
+);
+
+export const getJoined = createAsyncThunk(
+    "clubMember/getJoined",
+    async () => {
+        const res = await fetch(`${api}/api/club_members/clubs/joined`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -100,6 +115,16 @@ const clubMemberSlice = createSlice({
                 state.requestedClubs = action.payload;
             })
             .addCase(getRequested.rejected, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(getJoined.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getJoined.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.joinedClubs = action.payload;
+            })
+            .addCase(getJoined.rejected, (state, action) => {
                 state.isLoading = false;
             })
             .addCase(getClubMembers.pending, (state) => {

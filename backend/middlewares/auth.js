@@ -62,6 +62,16 @@ const student_auth = (req, res, next) => {
     next();
 }
 
+const club_admin_student_auth = (req, res, next) => {
+    const user = checkAuth(req, res);
+    if (user.role === "student" || user.role === "club_admin") {
+        res.locals.user = user;
+    } else {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    next();
+}
+
 const auth = (req, res, next) => {
     const user = checkAuth(req, res);
     res.locals.user = user;
@@ -73,5 +83,6 @@ module.exports = {
     club_admin_auth,
     school_club_admin_auth,
     student_auth,
+    club_admin_student_auth,
     auth
 };
