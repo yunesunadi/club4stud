@@ -64,10 +64,10 @@ export default function ClubProposals() {
                         const { _id, name, description, purpose, member_fees, founded_date, email, phone_number, owner, created_at } = club_proposal;
 
                         return (
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={6} key={_id}>
                                 <Card sx={{ width: "100%" }}>
                                     <CardContent>
-                                        <Box key={_id} sx={{
+                                        <Box sx={{
                                             "& > p": {
                                                 mb: 1
                                             },

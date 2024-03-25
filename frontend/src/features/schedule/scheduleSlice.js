@@ -62,10 +62,10 @@ const scheduleSlice = createSlice({
     reducers: {
         add: (state, action) => {
             (async () => {
-                const { description, date, start_time, end_time, location } = action.payload;
+                const { description, start_date_time, end_date_time, location } = action.payload;
                 await fetch(`${api}/api/schedules`, {
                     method: "PUT",
-                    body: JSON.stringify({ description, date, start_time, end_time, location }),
+                    body: JSON.stringify({ description, start_date_time, end_date_time, location }),
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
@@ -75,10 +75,10 @@ const scheduleSlice = createSlice({
         },
         update: (state, action) => {
             (async () => {
-                const { _id, description, date, start_time, end_time, location } = action.payload;
+                const { _id, description, start_date_time, end_date_time, location } = action.payload;
                 await fetch(`${api}/api/schedules/update/${_id}`, {
                     method: "PUT",
-                    body: JSON.stringify({ _id, description, date, start_time, end_time, location }),
+                    body: JSON.stringify({ _id, description, start_date_time, end_date_time, location }),
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
@@ -98,12 +98,7 @@ const scheduleSlice = createSlice({
                     },
                 });
             })();
-            state.schedules = state.schedules.map(schedule => {
-                if (schedule._id === _id) {
-                    schedule = {};
-                }
-                return schedule;
-            });
+            state.schedules = state.schedules.filter(schedule => schedule._id !== _id);
         },
         present: (state, action) => {
             const { schedule_id, student_id } = action.payload;

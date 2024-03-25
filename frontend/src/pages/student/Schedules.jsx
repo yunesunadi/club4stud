@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getJoined } from "../../features/schedule/scheduleSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function Schedules() {
     const { isLoading, joinedSchedules } = useSelector((store) => store.schedule);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (localStorage.getItem("token")) {

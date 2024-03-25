@@ -47,9 +47,9 @@ const getOne = wrapper(async (req, res) => {
 
 const insert = wrapper(async (req, res) => {
     const { _id: club_id, members } = res.locals.user;
-    const { description, date, start_time, end_time, location } = req.body;
+    const { description, start_date_time, end_date_time, location } = req.body;
 
-    if (!description || !date || !start_time || !end_time || !location) {
+    if (!description || !start_date_time || !end_date_time || !location) {
         return res.status(400).json({ error: "Please fill in all fields" });
     }
 
@@ -61,7 +61,7 @@ const insert = wrapper(async (req, res) => {
                 $push: {
                     schedules: {
                         _id: new ObjectId(),
-                        description, date, start_time, end_time, location, archive: false,
+                        description, start_date_time, end_date_time, location, archive: false,
                         attendance: [
                             ...members.map(({ student }) => {
                                 const student_id = new ObjectId(student);
@@ -88,9 +88,9 @@ const insert = wrapper(async (req, res) => {
 
 const update = wrapper(async (req, res) => {
     const { _id: cid } = res.locals.user;
-    const { _id: sid, description, date, start_time, end_time, location } = req.body;
+    const { _id: sid, description, start_date_time, end_date_time, location } = req.body;
 
-    if (!description || !date || !start_time || !end_time || !location) {
+    if (!description || !start_date_time || !end_date_time || !location) {
         return res.status(400).json({ error: "Please fill in all fields" });
     }
 
@@ -102,9 +102,8 @@ const update = wrapper(async (req, res) => {
             {
                 $set: {
                     "schedules.$.description": description,
-                    "schedules.$.date": date,
-                    "schedules.$.start_time": start_time,
-                    "schedules.$.end_time": end_time,
+                    "schedules.$.start_date_time": start_date_time,
+                    "schedules.$.end_date_time": end_date_time,
                     "schedules.$.location": location,
                     "schedules.$.updated_at": formatISO(new Date()),
                     updated_at: formatISO(new Date())
@@ -200,6 +199,7 @@ const getAttendance = wrapper(async (req, res) => {
                                 _id: "$schedules.attendance.student._id",
                                 student_id: "$schedules.attendance.student.student_id",
                                 name: "$schedules.attendance.student.name",
+                                batch: "$schedules.attendance.student.batch",
                             }
                         }
                     }

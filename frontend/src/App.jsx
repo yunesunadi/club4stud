@@ -1,8 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Error from "./pages/Error";
 import SchoolDashboard from "./pages/school_admin/Dashboard";
-import Home from "./pages/student/Home";
 import AcademicYears from "./pages/school_admin/AcademicYears";
 import Batches from "./pages/school_admin/Batches";
 import Students from "./pages/school_admin/Students";
@@ -38,16 +37,10 @@ export default function App() {
                     <Route path="dashboard" element={<SchoolDashboard />} />
                     <Route path="academic_years">
                         <Route index element={<AcademicYears />} />
-                        {/* <Route path="create" element={<AddAcademicYear />} /> */}
-                        {/* <Route path="edit/:id" element={<EditAcademicYear />} /> */}
                     </Route>
                     <Route path="batches">
                         <Route index element={<Batches />} />
-                        {/* <Route path="create" element={<AddBatch />} /> */}
-                        {/* <Route path="edit/:id" element={<EditBatch />} /> */}
                         <Route path="students/:id" element={<BatchStudents />} />
-                        {/* <Route path="students/create/:id" element={<AddStudent />} /> */}
-                        {/* <Route path="students/:bid/edit/:id" element={<EditStudent />} /> */}
                     </Route>
                     <Route path="students">
                         <Route index element={<Students />} />
@@ -61,7 +54,6 @@ export default function App() {
                     <Route path="setting" element={<SchoolSetting />} />
                 </Route>
                 <Route path="student" element={<StudentLayout />}>
-                    <Route path="home" element={<Home />} />
                     <Route path="clubs">
                         <Route index element={<StudentClubs />} />
                         <Route path="requested" element={<RequestedClubs />} />

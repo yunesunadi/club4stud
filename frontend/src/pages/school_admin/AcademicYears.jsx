@@ -21,6 +21,7 @@ import { format } from "date-fns";
 import { v4 as uuidv4 } from 'uuid';
 import { Typography } from "@mui/material";
 import AlertSnackBar from "../../components/school_admin/AlertSnackBar";
+import { useNavigate } from "react-router-dom";
 
 function EditToolbar(props) {
     const { setRows, setRowModesModel } = props;
@@ -56,6 +57,7 @@ export default function AcademicYears() {
 
     const { isLoading, academicYears } = useSelector((store) => store.academicYear);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [errors, setErrors] = useState([]);
     const [showAlert, setShowAlert] = useState(false);

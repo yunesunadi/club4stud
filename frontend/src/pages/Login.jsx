@@ -142,9 +142,9 @@ export default function Login() {
                                 mb: 2
                             }}
                         >
-                            <ToggleButton value="student">Student</ToggleButton>
-                            <ToggleButton value="club_admin">Club Admin</ToggleButton>
-                            <ToggleButton value="school_admin">School Admin</ToggleButton>
+                            <ToggleButton value="student" disabled={role === "student"}>Student</ToggleButton>
+                            <ToggleButton value="club_admin" disabled={role === "club_admin"}>Club Admin</ToggleButton>
+                            <ToggleButton value="school_admin" disabled={role === "school_admin"}>School Admin</ToggleButton>
                         </ToggleButtonGroup>
                         <TextField
                             variant="standard"

@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { cancel, getRequested } from "../../features/clubMember/clubMemberSlice";
 import { useAuth } from "../../providers/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function RequestedClubs() {
     const { isLoading, requestedClubs } = useSelector((store) => store.clubMember);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { authUser } = useAuth();
 
     useEffect(() => {

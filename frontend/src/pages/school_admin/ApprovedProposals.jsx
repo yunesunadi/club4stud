@@ -10,12 +10,14 @@ import { getApproved } from "../../features/club/clubSlice";
 import { getAll as getAllStudents } from "../../features/student/studentSlice";
 import { getAll as getAllBatches } from "../../features/batch/batchSlice";
 import { Box, Grid } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function ApprovedProposals() {
     const { isLoading, approvedProposals } = useSelector((store) => store.club);
     const { students } = useSelector((store) => store.student);
     const { batches } = useSelector((store) => store.batch);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -45,10 +47,10 @@ export default function ApprovedProposals() {
                         const { _id, name, description, purpose, member_fees, founded_date, email, phone_number, owner, created_at } = club_proposal;
 
                         return (
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={6} key={_id}>
                                 <Card sx={{ width: "100%" }}>
                                     <CardContent>
-                                        <Box key={_id} sx={{
+                                        <Box sx={{
                                             "& > p": {
                                                 mb: 1
                                             },
