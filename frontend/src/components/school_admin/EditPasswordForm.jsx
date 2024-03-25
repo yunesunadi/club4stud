@@ -1,8 +1,12 @@
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
+
 import { useRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 import { changePassword } from "../../features/schoolAdmin/schoolAdminSlice";
 
 const validateSchema = Yup.object().shape({
@@ -26,8 +30,8 @@ const validateSchema = Yup.object().shape({
 });
 
 export default function EditPasswordForm() {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const oldPasswordRef = useRef();
     const newPasswordRef = useRef();
     const confirmPasswordRef = useRef();
@@ -51,38 +55,53 @@ export default function EditPasswordForm() {
     );
 
     return (
-        <form
-            onSubmit={e => {
-                e.preventDefault();
-                const old_password = oldPasswordRef.current.value;
-                const new_password = newPasswordRef.current.value;
-                const confirm_password = confirmPasswordRef.current.value;
-                if (!old_password || !new_password || !confirm_password) return false;
-                dispatch(changePassword({ old_password, new_password }));
-                navigate("/school_admin/dashboard");
-            }}>
-            <label htmlFor="old_password">Old Password</label>
-            <input type="password" id="old_password" ref={oldPasswordRef}
-                onChange={(e) => {
-                    handleChange("old_password", e.target.value);
-                }} />
-            {formik.errors.old_password}
-            <br />
-            <label htmlFor="new_password">New Password</label>
-            <input type="password" id="new_password" ref={newPasswordRef}
-                onChange={(e) => {
-                    handleChange("new_password", e.target.value);
-                }} />
-            {formik.errors.new_password}
-            <br />
-            <label htmlFor="confirm_password">Confirm New Password</label>
-            <input type="password" id="confirm_password" ref={confirmPasswordRef}
-                onChange={(e) => {
-                    handleChange("confirm_password", e.target.value);
-                }} />
-            {formik.errors.confirm_password}
-            <br />
-            <button type="submit">Change Password</button>
-        </form>
+        <>
+            <Typography color="primary" component="h2">Change Password</Typography>
+            <form
+                onSubmit={e => {
+                    e.preventDefault();
+                    const old_password = oldPasswordRef.current.value;
+                    const new_password = newPasswordRef.current.value;
+                    const confirm_password = confirmPasswordRef.current.value;
+                    if (!old_password || !new_password || !confirm_password) return false;
+                    dispatch(changePassword({ old_password, new_password }));
+                    navigate("/school_admin/dashboard");
+                }}>
+                <TextField id="old_password" label="Old Password" variant="outlined"
+                    type="password"
+                    inputRef={oldPasswordRef}
+                    value={formik.values.old_password}
+                    onChange={(e) => handleChange("old_password", e.target.value)}
+                    helperText={formik.errors.old_password}
+                    sx={{
+                        width: { xs: "100%", sm: 400 }
+                    }}
+                    margin="normal"
+                /><br />
+                <TextField id="new_password" label="New Password" variant="outlined"
+                    type="password"
+                    inputRef={newPasswordRef}
+                    value={formik.values.new_password}
+                    onChange={(e) => handleChange("new_password", e.target.value)}
+                    helperText={formik.errors.new_password}
+                    sx={{
+                        width: { xs: "100%", sm: 400 }
+                    }}
+                    margin="normal"
+                /><br />
+                <TextField id="confirm_password" label="Confirm Password" variant="outlined"
+                    type="password"
+                    inputRef={confirmPasswordRef}
+                    value={formik.values.confirm_password}
+                    onChange={(e) => handleChange("confirm_password", e.target.value)}
+                    helperText={formik.errors.confirm_password}
+                    sx={{
+                        width: { xs: "100%", sm: 400 }
+                    }}
+                    margin="normal"
+                /><br />
+                <Button type="submit" variant="contained" sx={{ color: "light.main", mt: 2, mb: 3.5 }}>Change</Button>
+            </form>
+        </>
     )
 }
