@@ -165,12 +165,8 @@ const getAttendance = wrapper(async (req, res) => {
         const schedule_id = new ObjectId(id);
         const data = await clubs.aggregate([
             { $match: { "_id": club_id, "schedules._id": schedule_id } },
-            {
-                $unwind: "$schedules"
-            },
-            {
-                $unwind: "$schedules.attendance"
-            },
+            { $unwind: "$schedules" },
+            { $unwind: "$schedules.attendance" },
             {
                 $lookup: {
                     from: "students",
@@ -179,18 +175,16 @@ const getAttendance = wrapper(async (req, res) => {
                     as: "schedules.attendance.student"
                 }
             },
-            {
-                $unwind: "$schedules.attendance.student"
-            },
+            { $unwind: "$schedules.attendance.student" },
             {
                 $group: {
                     _id: {
                         _id: "$_id",
                         name: "$name",
-                        "scheduleId": "$schedules._id",
+                        scheduleId: "$schedules._id"
                     },
                     attendance: {
-                        $push: {
+                        $addToSet: {
                             present: "$schedules.attendance.present",
                             absent: "$schedules.attendance.absent",
                             created_at: "$schedules.attendance.created_at",

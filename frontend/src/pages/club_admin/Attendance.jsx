@@ -9,7 +9,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAttendance, present, absent } from "../../features/schedule/scheduleSlice";
 import { getAll as getBatches } from "../../features/batch/batchSlice";
@@ -21,6 +21,11 @@ export default function Attendance() {
     const { batches } = useSelector((store) => store.batch);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [forceUpdate, setForceUpdate] = useState(false);
+
+    function handleForceUpdate() {
+        setForceUpdate(prevState => !prevState);
+    }
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -32,8 +37,12 @@ export default function Attendance() {
         }
 
         dispatch(getBatches());
-        dispatch(getAttendance());
+        handleForceUpdate();
     }, []);
+
+    useEffect(() => {
+        dispatch(getAttendance());
+    }, [forceUpdate]);
 
     return (
         <>
@@ -63,7 +72,7 @@ export default function Attendance() {
                                     <TableCell component="th" scope="row">
                                         {index + 1}
                                     </TableCell>
-                                    <TableCell align="left">{batches.find(batch => batch._id === student.batch).name}</TableCell>
+                                    <TableCell align="left">{batches.find(batch => batch._id === student.batch)?.name}</TableCell>
                                     <TableCell align="left">{student.name}</TableCell>
                                     <TableCell align="left">
                                         <RadioGroup row name="attendance">
