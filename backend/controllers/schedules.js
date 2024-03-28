@@ -16,7 +16,16 @@ const getAll = wrapper(async (req, res) => {
                     schedules: 1,
                 }
             },
-
+            { $unwind: "$schedules" },
+            {
+                $sort: { "schedules.created_at": -1 }
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    schedules: { $push: "$schedules" }
+                }
+            }
         ]).toArray();
         return res.status(200).json({ data });
     }
