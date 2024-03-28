@@ -32,29 +32,6 @@ export default function Clubs() {
         dispatch(getAll());
     }, []);
 
-    const displayRequestBtn = (_id) => {
-        const requestBtn = <Button key={_id} variant="outlined" sx={{ mt: 1 }} onClick={() => {
-            dispatch(join({ _id, student: authUser._id }));
-            navigate("/student/clubs/requested");
-        }}
-            disabled={joinedClubs.map(joinedClub => {
-                if (joinedClub._id === _id) {
-                    return true;
-                }
-            })[0]}
-        >Request to join</Button>;
-
-        if (requestedClubs.length === 0) {
-            return requestBtn;
-        }
-
-        return requestedClubs.map(requestedClub => {
-            if (requestedClub._id !== _id) {
-                return requestBtn;
-            }
-        });
-    }
-
     return (
         <>
             <Typography color="primary" component="h1" variant="h5" mb={2}>Clubs</Typography>
@@ -119,9 +96,27 @@ export default function Clubs() {
                                                 <b>Phone Number:</b> {phone_number}
                                             </Typography>
                                             <Typography variant="body2" color="site.text">
-                                                <b>No. of Members:</b> {members.length}
+                                                <b>No. of Members:</b> {members.filter(member => member.request && member.approve).length}
                                             </Typography>
-                                            {displayRequestBtn(_id)}
+                                            <Button key={_id} variant="outlined" onClick={() => {
+                                                dispatch(join({ _id, student: authUser._id }));
+                                                navigate("/student/clubs/requested");
+                                            }}
+                                                sx={{
+                                                    mt: 1,
+                                                    display: joinedClubs.filter(joinedClub => joinedClub._id === _id)
+                                                        .map(() => {
+                                                            return "none";
+                                                        })[0],
+                                                }}
+                                                disabled={
+                                                    requestedClubs.filter(requestedClub => requestedClub._id === _id).map(() => {
+                                                        return true;
+                                                    })[0]
+                                                }
+                                            >
+                                                Request to join
+                                            </Button >
                                         </Box>
                                     </CardContent>
                                 </Card>

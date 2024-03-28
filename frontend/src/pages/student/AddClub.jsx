@@ -88,7 +88,7 @@ export default function AddClub() {
                     const password = passwordRef.current.value;
                     if (!name || !description || !purpose || !member_fees || !founded_date || !phone_number || !email || !password) return false;
                     dispatch(add({ name, description, purpose, member_fees, founded_date, phone_number, email, password, owner: authUser._id }));
-                    navigate(`/student/home`);
+                    navigate(`/student/schedules`);
                 }}>
                 <TextField id="name" label="Name" variant="outlined"
                     inputRef={nameRef}
