@@ -19,6 +19,8 @@ const login = wrapper(async (req, res) => {
         user = await school_admins.findOne({ email });
     } else if (role === "club_admin") {
         user = await clubs.findOne({ email, approve: true });
+        delete user.schedules;
+        delete user.members;
     } else if (role === "student") {
         user = await students.findOne({ email });
     }
