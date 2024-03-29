@@ -6,6 +6,7 @@ const initialState = {
     joinedSchedules: [],
     attendance: [],
     attendanceByMember: [],
+    allAttendanceByMember: [],
 };
 
 const api = import.meta.env.VITE_API_URL;
@@ -68,6 +69,20 @@ export const getAttendanceByMember = createAsyncThunk(
         const { data } = await res.json();
 
         return data[0].schedules;
+    }
+);
+
+export const getAllAttendanceByMember = createAsyncThunk(
+    "schedule/getAllAttendanceByMember",
+    async () => {
+        const res = await fetch(`${api}/api/schedules/attendance/all/members`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const { data } = await res.json();
+
+        return data;
     }
 );
 
@@ -196,6 +211,16 @@ const scheduleSlice = createSlice({
                 state.attendanceByMember = action.payload;
             })
             .addCase(getAttendanceByMember.rejected, (state, action) => {
+                state.isLoading = false;
+            })
+            .addCase(getAllAttendanceByMember.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAllAttendanceByMember.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.allAttendanceByMember = action.payload;
+            })
+            .addCase(getAllAttendanceByMember.rejected, (state, action) => {
                 state.isLoading = false;
             });
     },

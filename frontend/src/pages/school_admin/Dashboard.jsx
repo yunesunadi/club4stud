@@ -1,9 +1,11 @@
+import { Typography } from "@mui/material";
+
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../providers/AuthProvider";
 import { useEffect } from "react";
+import ClubGaugeChart from "../../components/school_admin/ClubGaugeChart";
+import OverallPieChart from "../../components/school_admin/OverallPieChart";
 
 export default function Dashboard() {
-    const { setAuth, setAuthUser } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,16 +20,9 @@ export default function Dashboard() {
 
     return (
         <>
-            <h2>Dashboard</h2>
-            <button type="button" onClick={() => {
-                setAuth(false);
-                setAuthUser({});
-                localStorage.removeItem("token");
-                localStorage.removeItem("role");
-                navigate("/");
-            }}>
-                Logout
-            </button>
+            <Typography color="primary" component="h1" variant="h5" mb={2}>Dashboard</Typography>
+            <OverallPieChart />
+            <ClubGaugeChart />
         </>
     );
 }

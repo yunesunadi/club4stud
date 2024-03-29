@@ -303,6 +303,67 @@ const getAttendanceByMember = wrapper(async (req, res) => {
     return res.status(500).json({ error: "Not a valid id" });
 });
 
+const getAllAttendanceByMember = wrapper(async (req, res) => {
+    const data = await clubs.aggregate([
+        { $unwind: "$schedules" },
+        { $unwind: "$schedules.attendance" },
+        {
+            $lookup: {
+                from: "students",
+                localField: "schedules.attendance.student",
+                foreignField: "_id",
+                as: "schedules.attendance.student"
+            }
+        },
+        { $unwind: "$schedules.attendance.student" },
+        {
+            $group: {
+                _id: {
+                    _id: "$_id",
+                    name: "$name",
+                    scheduleId: "$schedules._id",
+                    scheduleDescription: "$schedules.description",
+                    scheduleCreatedAt: "$schedules.created_at",
+                },
+                attendance: {
+                    $addToSet: {
+                        present: "$schedules.attendance.present",
+                        absent: "$schedules.attendance.absent",
+                        created_at: "$schedules.attendance.created_at",
+                        updated_at: "$schedules.attendance.updated_at",
+                        student: {
+                            _id: "$schedules.attendance.student._id",
+                            student_id: "$schedules.attendance.student.student_id",
+                            name: "$schedules.attendance.student.name",
+                            batch: "$schedules.attendance.student.batch",
+                        }
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                _id: "$_id._id",
+                name: "$_id.name",
+                schedules: {
+                    _id: "$_id.scheduleId",
+                    description: "$_id.scheduleDescription",
+                    attendance: "$attendance",
+                    created_at: "$_id.scheduleCreatedAt",
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                name: { $first: "$name" },
+                schedules: { $push: "$schedules" }
+            }
+        }
+    ]).toArray();
+    return res.status(200).json({ data });
+});
+
 const present = wrapper(async (req, res) => {
     const { scid, stid } = req.params;
     const { _id: club_id } = res.locals.user;
@@ -380,6 +441,7 @@ module.exports = {
     getJoined,
     getAttendance,
     getAttendanceByMember,
+    getAllAttendanceByMember,
     present,
     absent
 }
