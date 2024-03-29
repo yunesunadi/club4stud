@@ -5,6 +5,7 @@ Club4Stud (clubs for students) is a student club management system that intends 
 ## Features
 
 As a school admin,
+- Dashboard
 - CRUD academic years
 - CRUD batches
 - CRUD, search and filter students
@@ -22,6 +23,7 @@ As a student,
 - Change password
 
 As a club admin,
+- Dashboard
 - CRUD schedules
 - Make attendance for each schedule 
 - View students who request to join
