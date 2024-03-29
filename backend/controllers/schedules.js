@@ -190,7 +190,9 @@ const getAttendance = wrapper(async (req, res) => {
                     _id: {
                         _id: "$_id",
                         name: "$name",
-                        scheduleId: "$schedules._id"
+                        scheduleId: "$schedules._id",
+                        scheduleDescription: "$schedules.description",
+                        scheduleCreatedAt: "$schedules.created_at",
                     },
                     attendance: {
                         $addToSet: {
@@ -215,14 +217,8 @@ const getAttendance = wrapper(async (req, res) => {
                     schedules: {
                         _id: "$_id.scheduleId",
                         description: "$_id.scheduleDescription",
-                        date: "$_id.scheduleDate",
-                        start_time: "$_id.scheduleStartTime",
-                        end_time: "$_id.scheduleEndTime",
-                        location: "$_id.scheduleLocation",
-                        archive: "$_id.scheduleArchive",
                         attendance: "$attendance",
                         created_at: "$_id.scheduleCreatedAt",
-                        updated_at: "$_id.scheduleUpdatedAt"
                     }
                 }
             },
@@ -262,7 +258,9 @@ const getAttendanceByMember = wrapper(async (req, res) => {
                     _id: {
                         _id: "$_id",
                         name: "$name",
-                        scheduleId: "$schedules._id"
+                        scheduleId: "$schedules._id",
+                        scheduleDescription: "$schedules.description",
+                        scheduleCreatedAt: "$schedules.created_at",
                     },
                     attendance: {
                         $addToSet: {
@@ -287,14 +285,8 @@ const getAttendanceByMember = wrapper(async (req, res) => {
                     schedules: {
                         _id: "$_id.scheduleId",
                         description: "$_id.scheduleDescription",
-                        date: "$_id.scheduleDate",
-                        start_time: "$_id.scheduleStartTime",
-                        end_time: "$_id.scheduleEndTime",
-                        location: "$_id.scheduleLocation",
-                        archive: "$_id.scheduleArchive",
                         attendance: "$attendance",
                         created_at: "$_id.scheduleCreatedAt",
-                        updated_at: "$_id.scheduleUpdatedAt"
                     }
                 }
             },

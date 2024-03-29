@@ -3,6 +3,7 @@ import { useAuth } from "../../providers/AuthProvider";
 import { useEffect } from "react";
 import MembersBarChart from "../../components/club_admin/MembersBarChart";
 import { Typography } from "@mui/material";
+import SchedulesLineChart from "../../components/club_admin/SchedulesLineChart";
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ export default function Dashboard() {
         <>
             <Typography color="primary" component="h1" variant="h5" mb={2}>Dashboard</Typography>
             <MembersBarChart />
+            <SchedulesLineChart />
         </>
     )
 }

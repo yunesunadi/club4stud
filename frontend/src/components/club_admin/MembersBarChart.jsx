@@ -38,12 +38,17 @@ export default function MembersBarChart() {
             });
         });
 
-        setResult(
-            Object.keys(attendanceCount).map(studentId => {
-                const studentAttendance = attendanceCount[studentId];
-                return studentAttendance;
-            })
-        );
+        const data = Object.keys(attendanceCount).map(studentId => attendanceCount[studentId])
+            .sort((a, b) => {
+                let nameA = a.name.toLowerCase();
+                let nameB = b.name.toLowerCase();
+
+                if (nameA < nameB) return -1;
+                if (nameA > nameB) return 1;
+                return 0;
+            });
+
+        setResult(data);
     }, [attendanceByMember]);
 
     return (
