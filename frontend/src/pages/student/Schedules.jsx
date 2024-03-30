@@ -1,8 +1,8 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
-import { Box, Grid } from '@mui/material';
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Box, Grid } from "@mui/material";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +24,13 @@ export default function Schedules() {
         }
 
         dispatch(getJoined());
+
+        const alreadyLoaded = localStorage.getItem("alreadyLoaded");
+
+        if (!alreadyLoaded) {
+            localStorage.setItem("alreadyLoaded", true);
+            window.location.reload();
+        }
     }, []);
 
     return (

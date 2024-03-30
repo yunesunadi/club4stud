@@ -16,6 +16,13 @@ export default function Dashboard() {
         } else {
             navigate("/");
         }
+
+        const alreadyLoaded = localStorage.getItem("alreadyLoaded");
+
+        if (!alreadyLoaded) {
+            localStorage.setItem("alreadyLoaded", true);
+            window.location.reload();
+        }
     }, []);
 
     return (

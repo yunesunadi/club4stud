@@ -102,6 +102,7 @@ export default function AccountMenu() {
                     setAuthUser({});
                     localStorage.removeItem("token");
                     localStorage.removeItem("role");
+                    localStorage.removeItem("alreadyLoaded");
                     navigate("/");
                 }} sx={{ color: "site.text" }}>
                     <ListItemIcon>
