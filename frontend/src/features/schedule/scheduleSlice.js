@@ -52,7 +52,14 @@ export const getAttendance = createAsyncThunk(
             },
         });
         const { data } = await res.json();
-        const attendance = data[0].schedules[0].attendance;
+        const attendance = data[0].schedules.find(({ _id }) => _id === id).attendance.sort((a, b) => {
+            let nameA = a.student.name.toLowerCase();
+            let nameB = b.student.name.toLowerCase();
+
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+            return 0;
+        });;
 
         return { _id: id, attendance };
     }

@@ -22,12 +22,8 @@ export default function Attendance() {
     const { batches } = useSelector((store) => store.batch);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [forceUpdate, setForceUpdate] = useState(false);
+    const [scheduleAttendance, setScheduleAttendance] = useState([]);
     const [save, setSave] = useState(false);
-
-    function handleForceUpdate() {
-        setForceUpdate(prevState => !prevState);
-    }
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -39,23 +35,25 @@ export default function Attendance() {
         }
 
         dispatch(getBatches());
-        handleForceUpdate();
+        dispatch(getAttendance());
     }, []);
 
     useEffect(() => {
-        dispatch(getAttendance());
-    }, [forceUpdate]);
+        setScheduleAttendance(attend.attendance);
+    }, [attend.attendance]);
 
     return (
         <>
             <Typography color="primary" component="h1" variant="h5" mb={1}>Attendance</Typography>
-            <Typography color="primary" component="h3" variant="body1" mb={2} display="flex" justifyContent="end" >
-                All: {attend.attendance?.length} | Present: {attend.attendance?.filter(({ present }) => present).length} | Absent: {attend.attendance?.filter(({ absent }) => absent).length}
-            </Typography>
             {isLoading && (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                     <CircularProgress />
                 </Box>
+            )}
+            {!isLoading && (
+                <Typography color="primary" component="h3" variant="body1" mb={2} display="flex" justifyContent="end" >
+                    All: {scheduleAttendance?.length} | Present: {scheduleAttendance?.filter(({ present }) => present).length} | Absent: {scheduleAttendance?.filter(({ absent }) => absent).length}
+                </Typography>
             )}
             {!isLoading && (
                 <>
@@ -70,7 +68,7 @@ export default function Attendance() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {attend.attendance?.map(({ student, present: isPresent, absent: isAbsent }, index) => {
+                                {scheduleAttendance?.map(({ student, present: isPresent, absent: isAbsent }, index) => {
                                     return <TableRow
                                         key={student._id}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
