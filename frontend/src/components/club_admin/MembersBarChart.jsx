@@ -52,8 +52,8 @@ export default function MembersBarChart() {
     }, [attendanceByMember]);
 
     return (
-        <>
-            <Typography color="secondary" variant="body2" mb={2}>Number of schedules per each member</Typography>
+        <Box>
+            <Typography color="secondary" variant="subtitle1" mb={2}>Number of schedules per each member</Typography>
             {isLoading && (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                     <CircularProgress />
@@ -61,9 +61,9 @@ export default function MembersBarChart() {
             )}
             {!isLoading && result.length > 0 &&
                 (
-                    <Box style={{ height: 300, overflowX: "auto" }}>
+                    <Box style={{ height: 350, overflowX: "auto" }}>
                         <BarChart
-                            width={900}
+                            width={1000}
                             series={[
                                 { data: result.map(({ presentCount }) => presentCount), label: "Present", id: "present" },
                                 { data: result.map(({ absentCount }) => absentCount), label: "Absent", id: "absent" },
@@ -73,6 +73,6 @@ export default function MembersBarChart() {
                     </Box>
                 )
             }
-        </>
+        </Box>
     );
 }

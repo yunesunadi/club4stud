@@ -25,24 +25,23 @@ export default function OverallPieChart() {
     }, [allAttendanceByMember])
 
     return (
-        <>
+        <Box>
+            <Typography color="secondary" variant="subtitle1" mb={2}>Overall attendance %</Typography>
             {isLoading && (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                     <CircularProgress />
                 </Box>
             )}
             {!isLoading && result.length > 0 && (
-                <>
-                    <Typography color="secondary" variant="body2" mb={2}>Overall attendance %</Typography>
+                <Box style={{ height: 250, overflowX: "auto" }}>
                     <PieChart
                         series={[{
                             data: result
                         }]}
-                        width={800}
-                        height={200}
+                        width={900}
                     />
-                </>
+                </Box>
             )}
-        </>
+        </Box>
     );
 }

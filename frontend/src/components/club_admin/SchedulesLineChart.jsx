@@ -24,8 +24,8 @@ export default function SchedulesLineChart() {
     }, [attendanceByMember]);
 
     return (
-        <>
-            <Typography color="secondary" variant="body2" mb={2}>Attendance percentage per each schedule</Typography>
+        <Box>
+            <Typography color="secondary" variant="subtitle1" mb={2}>Attendance percentage per each schedule</Typography>
             {isLoading && (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                     <CircularProgress />
@@ -33,9 +33,9 @@ export default function SchedulesLineChart() {
             )}
             {!isLoading && result.length > 0 &&
                 (
-                    <Box style={{ height: 300, overflowX: "auto" }}>
+                    <Box style={{ height: 350, overflowX: "auto" }}>
                         <LineChart
-                            width={900}
+                            width={1000}
                             series={[
                                 { data: result?.map(({ percent }) => percent), label: "Attendance %" },
                             ]}
@@ -44,6 +44,6 @@ export default function SchedulesLineChart() {
                     </Box>
                 )
             }
-        </>
+        </Box>
     );
 }

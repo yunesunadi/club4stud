@@ -27,14 +27,19 @@ export default function OverallGaugeChart() {
     }, [attendanceByMember]);
 
     return (
-        <>
-            <Typography color="secondary" variant="body2" mb={2}>Overall attendance %</Typography>
+        <Box>
+            <Typography color="secondary" variant="subtitle1" mb={2} textAlign="center">Overall attendance %</Typography>
             {isLoading && (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                     <CircularProgress />
                 </Box>
             )}
-            {!isLoading && result && <Gauge width={150} height={150} value={result} />}
-        </>
+            {!isLoading && result && (
+                <Box display="flex" alignContent="center">
+                    <Gauge width={200} height={200} value={result} />
+                </Box>
+            )
+            }
+        </Box>
     );
 }

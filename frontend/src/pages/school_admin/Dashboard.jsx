@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -21,8 +21,10 @@ export default function Dashboard() {
     return (
         <>
             <Typography color="primary" component="h1" variant="h5" mb={2}>Dashboard</Typography>
-            <OverallPieChart />
-            <ClubGaugeChart />
+            <Box display="flex" flexDirection="column" sx={{ rowGap: 3, mb: 2 }}>
+                <OverallPieChart />
+                <ClubGaugeChart />
+            </Box>
         </>
     );
 }
