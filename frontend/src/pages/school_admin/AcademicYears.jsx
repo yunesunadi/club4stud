@@ -229,7 +229,7 @@ export default function AcademicYears() {
             {!isLoading && (
                 <Box
                     sx={{
-                        height: 400,
+                        height: 430,
                         width: "100%",
                         "& .actions": {
                             color: "text.secondary",
@@ -237,6 +237,7 @@ export default function AcademicYears() {
                         "& .textPrimary": {
                             color: "text.primary",
                         },
+                        mb: 3
                     }}
                 >
                     <DataGrid
@@ -255,6 +256,10 @@ export default function AcademicYears() {
                             toolbar: { setRows, setRowModesModel },
                         }}
                         disableRowSelectionOnClick
+                        initialState={{
+                            pagination: { paginationModel: { pageSize: 5 } },
+                        }}
+                        pageSizeOptions={[5, 10, 25]}
                     />
                 </Box>
             )}

@@ -44,19 +44,17 @@ export default function Attendance() {
 
     return (
         <>
-            <Typography color="primary" component="h1" variant="h5" mb={1}>Attendance</Typography>
             {isLoading && (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                     <CircularProgress />
                 </Box>
             )}
             {!isLoading && (
-                <Typography color="primary" component="h3" variant="body1" mb={2} display="flex" justifyContent="end" >
-                    All: {scheduleAttendance?.length} | Present: {scheduleAttendance?.filter(({ present }) => present).length} | Absent: {scheduleAttendance?.filter(({ absent }) => absent).length}
-                </Typography>
-            )}
-            {!isLoading && (
                 <>
+                    <Typography color="primary" component="h1" variant="h5" mb={1}>{attend.description}'s Attendance</Typography>
+                    <Typography color="primary" component="h3" variant="body1" mb={2} display="flex" justifyContent="end" >
+                        All: {scheduleAttendance?.length} | Present: {scheduleAttendance?.filter(({ present }) => present).length} | Absent: {scheduleAttendance?.filter(({ absent }) => absent).length}
+                    </Typography>
                     <TableContainer component={Paper} sx={{ mb: 2 }}>
                         <Table sx={{ minWidth: 650 }}>
                             <TableHead>

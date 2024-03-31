@@ -118,7 +118,7 @@ export default function joinedMembers() {
             {!isLoading && (
                 <Box
                     sx={{
-                        height: 400,
+                        height: 430,
                         width: "100%",
                         "& .actions": {
                             color: "text.secondary",
@@ -126,12 +126,21 @@ export default function joinedMembers() {
                         "& .textPrimary": {
                             color: "text.primary",
                         },
+                        mb: 3
                     }}
                 >
                     <DataGrid
                         rows={rows}
                         columns={columns}
                         editMode="row"
+                        initialState={{
+                            pagination: {
+                                paginationModel: {
+                                    pageSize: 5,
+                                },
+                            },
+                        }}
+                        pageSizeOptions={[5, 10, 25]}
                         disableRowSelectionOnClick
                     />
                 </Box>

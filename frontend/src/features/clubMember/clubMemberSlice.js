@@ -91,7 +91,6 @@ const clubMemberSlice = createSlice({
                     },
                 });
             })();
-            state.requestedClubs = state.requestedClubs.filter(club => club._id !== _id);
         },
         approve: (state, action) => {
             (async () => {
@@ -102,7 +101,6 @@ const clubMemberSlice = createSlice({
                     },
                 });
             })();
-            // state.requestedClubs = state.requestedClubs.filter(club => club._id !== _id);
         },
     },
     extraReducers: (builder) => {

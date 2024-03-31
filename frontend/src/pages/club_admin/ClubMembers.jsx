@@ -88,7 +88,7 @@ export default function ClubMembers() {
                 </Box>
             )}
             {!isLoading && (
-                <Box sx={{ height: "80vh", width: "100%" }}>
+                <Box sx={{ height: 430, width: "100%", mb: 3 }}>
                     <DataGrid
                         rows={clubMembers?.map(({ student: member }, index) => {
                             return {
@@ -107,7 +107,7 @@ export default function ClubMembers() {
                                 },
                             },
                         }}
-                        pageSizeOptions={[5]}
+                        pageSizeOptions={[5, 10, 25]}
                         slots={{ toolbar: GridToolbar }}
                         slotProps={{
                             toolbar: {

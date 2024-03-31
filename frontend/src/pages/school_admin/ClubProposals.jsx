@@ -6,6 +6,15 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import DoDisturbAltOutlinedIcon from '@mui/icons-material/DoDisturbAltOutlined';
 import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import ScheduleSendOutlinedIcon from '@mui/icons-material/ScheduleSendOutlined';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
+import AdsClickOutlinedIcon from '@mui/icons-material/AdsClickOutlined';
+import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -67,43 +76,63 @@ export default function ClubProposals() {
                             <Grid item xs={12} md={6} key={_id}>
                                 <Card sx={{ width: "100%" }}>
                                     <CardContent>
-                                        <Box sx={{
-                                            "& > p": {
-                                                mb: 1
-                                            },
-                                            "& > p:last-child": {
-                                                mb: -1.5
-                                            }
-                                        }}>
-                                            <Typography variant="body2" color="site.text">
-                                                <b>Name:</b> {name}
-                                            </Typography>
-                                            <Typography variant="body2" color="site.text">
-                                                <b>Description:</b> {description}
-                                            </Typography>
-                                            <Typography variant="body2" color="site.text">
-                                                <b>Purpose:</b> {purpose}
-                                            </Typography>
-                                            <Typography variant="body2" color="site.text">
-                                                <b>Member Fees:</b> {member_fees} Ks
-                                            </Typography>
-                                            <Typography variant="body2" color="site.text">
-                                                <b>Founded Date:</b> {founded_date}
-                                            </Typography>
-                                            <Typography variant="body2" color="site.text">
-                                                <b>Email:</b> {email}
-                                            </Typography>
-                                            <Typography variant="body2" color="site.text">
-                                                <b>Phone Number:</b> {phone_number}
-                                            </Typography>
-                                            <Typography variant="body2" color="site.text">
-                                                <b>Sent By:</b> {students.find(({ _id }) => _id === owner)?.name} (Batch {batches.find(({ _id }) =>
-                                                    students.find(({ batch }) => batch === _id)
-                                                )?.name})
-                                            </Typography>
-                                            <Typography variant="body2" color="site.text">
-                                                <b>Sent At:</b> {format(created_at, "hh:mm:ss a, MMM d, y")}
-                                            </Typography>
+                                        <Box mt={.5} display="flex" flexDirection="column" rowGap={1}>
+                                            <Box display="flex" alignItems="center" columnGap={1}>
+                                                <BadgeOutlinedIcon sx={{ color: "site.text" }} />
+                                                <Typography variant="body2" color="site.text">
+                                                    {name}
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" columnGap={1}>
+                                                <ArticleOutlinedIcon sx={{ color: "site.text" }} />
+                                                <Typography variant="body2" color="site.text">
+                                                    {description}
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" columnGap={1}>
+                                                <AdsClickOutlinedIcon sx={{ color: "site.text" }} />
+                                                <Typography variant="body2" color="site.text">
+                                                    {purpose}
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" columnGap={1}>
+                                                <DateRangeOutlinedIcon sx={{ color: "site.text" }} />
+                                                <Typography variant="body2" color="site.text">
+                                                    Founded at {founded_date}
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" columnGap={1}>
+                                                <PaidOutlinedIcon sx={{ color: "site.text" }} />
+                                                <Typography variant="body2" color="site.text">
+                                                    {member_fees} Ks
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" columnGap={1}>
+                                                <EmailOutlinedIcon sx={{ color: "site.text" }} />
+                                                <Typography variant="body2" color="site.text">
+                                                    {email}
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" columnGap={1}>
+                                                <LocalPhoneOutlinedIcon sx={{ color: "site.text" }} />
+                                                <Typography variant="body2" color="site.text">
+                                                    {phone_number}
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" columnGap={1}>
+                                                <PersonOutlineOutlinedIcon sx={{ color: "site.text" }} />
+                                                <Typography variant="body2" color="site.text">
+                                                    Sent by {students.find(({ _id }) => _id === owner)?.name} (Batch {batches.find(({ _id }) =>
+                                                        students.find(({ _id: student_id, batch }) => batch === _id && student_id === owner)
+                                                    )?.name})
+                                                </Typography>
+                                            </Box>
+                                            <Box display="flex" alignItems="center" columnGap={1}>
+                                                <ScheduleSendOutlinedIcon sx={{ color: "site.text" }} />
+                                                <Typography variant="body2" color="site.text">
+                                                    Sent at {format(created_at, "hh:mm:ss a, MMM d, y")}
+                                                </Typography>
+                                            </Box>
                                         </Box>
                                     </CardContent>
                                     <CardActions sx={{ mb: .5 }}>

@@ -94,7 +94,7 @@ export default function BatchStudents() {
                 </Box>
             )}
             {!isLoading && (
-                <Box sx={{ height: "80vh", width: "100%" }}>
+                <Box sx={{ height: 430, width: "100%", mb: 3 }}>
                     <DataGrid
                         rows={students.map((student, index) => {
                             return {
@@ -108,14 +108,6 @@ export default function BatchStudents() {
                             };
                         })}
                         columns={columns}
-                        initialState={{
-                            pagination: {
-                                paginationModel: {
-                                    pageSize: 5,
-                                },
-                            },
-                        }}
-                        pageSizeOptions={[5]}
                         slots={{ toolbar: GridToolbar }}
                         slotProps={{
                             toolbar: {
@@ -124,6 +116,10 @@ export default function BatchStudents() {
                         }}
                         disableRowSelectionOnClick
                         disableDensitySelector
+                        initialState={{
+                            pagination: { paginationModel: { pageSize: 5 } },
+                        }}
+                        pageSizeOptions={[5, 10, 25]}
                     />
                 </Box>
             )}

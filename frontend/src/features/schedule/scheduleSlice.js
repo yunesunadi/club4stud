@@ -35,8 +35,14 @@ export const getJoined = createAsyncThunk(
             },
         });
         const { data } = await res.json();
+        const club_id = data[0]._id;
+        const sortedSchedules = data[0].schedules.filter(schedule => (Object.keys(schedule).length !== 0)).sort((a, b) => {
+            const aTime = new Date(a.created_at).getTime();
+            const bTime = new Date(b.created_at).getTime();
+            return bTime - aTime;
+        });
 
-        return data[0].schedules.filter(schedule => (Object.keys(schedule).length !== 0));
+        return [club_id, sortedSchedules];
     }
 );
 
@@ -52,6 +58,7 @@ export const getAttendance = createAsyncThunk(
             },
         });
         const { data } = await res.json();
+        const description = data[0].schedules.find(({ _id }) => _id === id).description;
         const attendance = data[0].schedules.find(({ _id }) => _id === id).attendance.sort((a, b) => {
             let nameA = a.student.name.toLowerCase();
             let nameB = b.student.name.toLowerCase();
@@ -61,7 +68,7 @@ export const getAttendance = createAsyncThunk(
             return 0;
         });;
 
-        return { _id: id, attendance };
+        return { _id: id, description, attendance };
     }
 );
 
