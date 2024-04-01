@@ -5,17 +5,15 @@ import {
     Container,
     Toolbar,
     Divider,
-    Typography,
     List,
     Box,
     ListItem,
     ListItemButton,
     ListItemIcon,
-    ListItemText,
+    ListItemText
 } from "@mui/material";
 
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import FeaturedPlayListOutlinedIcon from '@mui/icons-material/FeaturedPlayListOutlined';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 
 import { styled } from "@mui/material/styles";
@@ -30,6 +28,7 @@ import { useState } from "react";
 import AccountMenu from "./components/student/AccountMenu";
 import ModeSwitch from "./components/ModeSwitch";
 import { useAppTheme } from "./providers/AppThemeProvider";
+import Logo from "./components/Logo";
 
 const openedMixin = (theme) => ({
     width: 210,
@@ -113,25 +112,7 @@ export default function StudentLayout() {
                         }}
                     >
                         <Link to="/student/schedules" style={{ textDecoration: "none" }}>
-                            <Box
-                                sx={{
-                                    cursor: "pointer",
-                                    display: "inline-flex",
-                                    ml: { xs: .8, sm: 1.3 }
-                                }}
-                                alignItems="center"
-                                columnGap={0.5}
-                                mt={0.3}
-                                color="site.logo"
-                            >
-                                <FeaturedPlayListOutlinedIcon />
-                                <Typography
-                                    variant="h6"
-                                    component="h1"
-                                >
-                                    Club4Stud
-                                </Typography>
-                            </Box>
+                            <Logo />
                         </Link>
                         <Box display="flex">
                             <ModeSwitch />
