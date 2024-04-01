@@ -55,7 +55,7 @@ const getOne = wrapper(async (req, res) => {
 });
 
 const insert = wrapper(async (req, res) => {
-    const { _id: club_id, members } = res.locals.user;
+    const { _id: club_id } = res.locals.user;
     const { description, start_date_time, end_date_time, location } = req.body;
 
     if (!description || !start_date_time || !end_date_time || !location) {
@@ -64,6 +64,7 @@ const insert = wrapper(async (req, res) => {
 
     if (ObjectId.isValid(club_id)) {
         const _id = new ObjectId(club_id);
+        const authClub = await clubs.findOne({ _id });
         await clubs.updateOne(
             { _id },
             {
@@ -72,7 +73,7 @@ const insert = wrapper(async (req, res) => {
                         _id: new ObjectId(),
                         description, start_date_time, end_date_time, location, archive: false,
                         attendance: [
-                            ...members.map(({ student }) => {
+                            ...authClub.members.map(({ student }) => {
                                 const student_id = new ObjectId(student);
                                 return {
                                     student: student_id, present: false, absent: false,
