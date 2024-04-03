@@ -40,3 +40,19 @@ As a club admin,
 - Redux Toolkit
 - Material UI
 - Node.js
+
+## For Testing
+
+Feel free to play around [the application](https://club4stud.yunesunadi.com/).
+
+School Admin Role
+- Email - `info@stuaffairs.com`
+- Password - `P@$$w0rd`
+
+Club Admin Role
+- Email - `ttclub@gmail.com`, `bbclub@gmail.com`, `msclub@gmail.com`
+- Password - `P@$$w0rd`
+
+Student Role
+- Email - `alice@gmail.com`, `fred@gmail.com`, `lucas@gmail.com`, `paul@gmail.com`, `yuna@gmail.com`
+- Password - `password`
