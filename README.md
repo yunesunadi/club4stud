@@ -46,7 +46,7 @@ As a club admin,
 Feel free to play around [the application](https://club4stud.yunesunadi.com/).
 
 School Admin Role
-- Email - `info@stuaffairs.com`
+- Email - `info@stuaffair.com`
 - Password - `P@$$w0rd`
 
 Club Admin Role
